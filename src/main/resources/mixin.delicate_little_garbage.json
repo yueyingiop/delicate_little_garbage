@@ -1,0 +1,29 @@
+{
+    "required": true,
+    "package": "com.core.DLG.mixin",
+    "compatibilityLevel": "JAVA_17",
+    "refmap": "delicate_little_garbage.refmap.json",
+    "mixins": [
+        "ItemCooldownsMixin",
+        "client.ForgeGuiMixin",
+        "client.GuiGraphicsMixin",
+        "client.appleskin.HUDOverlayHandlerMixin",
+        "food.FoodDataMixin",
+        "food.FoodPropertiesMixin",
+        "itemStack.ArmorItemMixin",
+        "itemStack.BowlFoodItemMixin",
+        "itemStack.BucketItemMixin",
+        "itemStack.ContainerMixin",
+        "itemStack.ItemEntityMixin",
+        "itemStack.ItemMixin",
+        "itemStack.ItemProMixin",
+        "itemStack.ItemStackMixin",
+        "itemStack.MilkBucketItemMixin",
+        "itemStack.RecordItemMixin",
+        "itemStack.ServerGameListenerMixin",
+        "itemStack.SuspiciousStewItemMixin"
+    ],
+    "client": [
+    ],
+    "minVersion": "0.8.5"
+}
