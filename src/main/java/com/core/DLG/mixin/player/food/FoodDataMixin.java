@@ -1,4 +1,4 @@
-package com.core.DLG.mixin.food;
+package com.core.DLG.mixin.player.food;
 
 import java.io.IOException;
 
@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.core.DLG.configs.FoodConfig;
+import com.core.DLG.configs.PlayerConfig;
 
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.player.Player;
@@ -31,28 +31,28 @@ public abstract class FoodDataMixin {
 
     @Inject(method = "<init>",at = @At("TAIL")) // 构造函数注入
     public void init(CallbackInfo ci) throws IOException {
-        FoodConfig.init();
-        this.foodLevel = FoodConfig.getMaxHungry();
+        PlayerConfig.init();
+        this.foodLevel = PlayerConfig.getMaxHungry();
     }
 
     /**
-     * @auther yueyingiop
+     * @author yueyingiop
      * @reason 修改最大饥饿值
     */
     @Overwrite
     public void eat(int foodLevelIn, float foodSaturationModifier) throws IOException {
-        FoodConfig.init();
-        this.foodLevel = Math.min(foodLevelIn + this.foodLevel, FoodConfig.getMaxHungry());
+        PlayerConfig.init();
+        this.foodLevel = Math.min(foodLevelIn + this.foodLevel, PlayerConfig.getMaxHungry());
         this.saturationLevel = Math.min(this.saturationLevel + (float) foodLevelIn * foodSaturationModifier * 2.0F, (float) this.foodLevel);
     }
 
     /**
-     * @auther yueyingiop
+     * @author yueyingiop
      * @reason 修改饥饿值消耗逻辑
     */
     @Overwrite
     public void tick(Player player) throws IOException {
-        FoodConfig.init();
+        PlayerConfig.init();
 
         // 原版机制
         Difficulty difficulty = player.level().getDifficulty();
@@ -67,7 +67,7 @@ public abstract class FoodDataMixin {
         }
 
         boolean flag = player.level().getGameRules().getBoolean(GameRules.RULE_NATURAL_REGENERATION);
-        if (flag && this.saturationLevel > 0.0F && player.isHurt() && this.foodLevel >= FoodConfig.getMaxHungry()) {
+        if (flag && this.saturationLevel > 0.0F && player.isHurt() && this.foodLevel >= PlayerConfig.getMaxHungry()) {
             ++this.tickTimer;
             if (this.tickTimer >= 10) {
                 float f = Math.min(this.saturationLevel, 6.0F);
@@ -98,32 +98,32 @@ public abstract class FoodDataMixin {
     }
 
     /**
-     * @auther yueyingiop
+     * @author yueyingiop
      * @reason 修改最大饥饿值
     */
     @Overwrite
     public boolean needsFood() throws IOException {
-        FoodConfig.init();
-        return foodLevel < FoodConfig.getMaxHungry();
+        PlayerConfig.init();
+        return foodLevel < PlayerConfig.getMaxHungry();
     }
 
     @Shadow
     public abstract void addExhaustion(float exhaustion);
 
     /**
-     * @auther yueyingiop
+     * @author yueyingiop
      * @reason 修改最大饥饿值
     */
     @Overwrite
     public void setFoodLevel(int foodLevel) throws IOException {
-        FoodConfig.init();
-        if (foodLevel > FoodConfig.getMaxHungry()) return;
+        PlayerConfig.init();
+        if (foodLevel > PlayerConfig.getMaxHungry()) return;
         this.lastFoodLevel = this.foodLevel;
-        this.foodLevel = Math.min(foodLevel, FoodConfig.getMaxHungry());
+        this.foodLevel = Math.min(foodLevel, PlayerConfig.getMaxHungry());
     }
 
     /**
-     * @auther yueyingiop
+     * @author yueyingiop
      * @reason 修改最大饥饿值
     */
     @Overwrite

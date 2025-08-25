@@ -1,4 +1,4 @@
-package com.core.DLG.mixin.food;
+package com.core.DLG.mixin.player.food;
 
 import java.io.IOException;
 
@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import com.core.DLG.configs.FoodConfig;
+import com.core.DLG.configs.PlayerConfig;
 
 import net.minecraft.world.food.FoodProperties;
 
@@ -19,8 +19,8 @@ public abstract class FoodPropertiesMixin {
 
     @Inject(method = "canAlwaysEat",at = @At("RETURN"), cancellable = true)
     private void canAlwaysEat(CallbackInfoReturnable<Boolean> cir) throws IOException { 
-        FoodConfig.init();
-        if (FoodConfig.getAlwaysEat()) {
+        PlayerConfig.init();
+        if (PlayerConfig.getAlwaysEat()) {
             cir.setReturnValue(true);
         }
     }

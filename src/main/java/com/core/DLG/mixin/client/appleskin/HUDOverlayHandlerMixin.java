@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.core.DLG.configs.FoodConfig;
+import com.core.DLG.configs.PlayerConfig;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;
@@ -31,8 +31,8 @@ public abstract class HUDOverlayHandlerMixin {
         Player player = mc.player;
         if (player == null) return null;
 
-        FoodConfig.init();
-        int maxLevel = FoodConfig.getMaxHungry();
+        PlayerConfig.init();
+        int maxLevel = PlayerConfig.getMaxHungry();
         if (maxLevel >= 1000) maxLevel = 1000;
 
         int totalIcons = (int) Math.ceil(maxLevel / 2.0);
@@ -80,12 +80,12 @@ public abstract class HUDOverlayHandlerMixin {
     // 生成多行食物图标的偏移量
     @Inject(method = "generateHungerBarOffsets", at = @At("HEAD"), cancellable = true, remap = false)
     private static void onGenerateHungerBarOffsets(int top, int left, int right, int ticks, Player player, CallbackInfo ci) throws IOException {
-        FoodConfig.init();
+        PlayerConfig.init();
 
         Minecraft mc = Minecraft.getInstance();
         
         // 获取最大饥饿值
-        int maxLevel = FoodConfig.getMaxHungry();
+        int maxLevel = PlayerConfig.getMaxHungry();
         if (maxLevel >= 1000) maxLevel = 1000;
 
         // 计算总图标数
@@ -134,7 +134,7 @@ public abstract class HUDOverlayHandlerMixin {
     @Inject(method = "drawSaturationOverlay", at = @At("HEAD"), cancellable = true, remap = false)
     private static void onDrawSaturationOverlay(float saturationGained, float saturationLevel, Minecraft mc, GuiGraphics guiGraphics, int right, int top, float alpha, CallbackInfo ci) {
         // 获取最大饥饿值
-        int maxLevel = FoodConfig.getMaxHungry();
+        int maxLevel = PlayerConfig.getMaxHungry();
         if (maxLevel >= 1000) maxLevel = 1000;
         
         if (saturationLevel + saturationGained < 0) {
@@ -186,7 +186,7 @@ public abstract class HUDOverlayHandlerMixin {
     // 绘制饥饿图标
     @Inject(method = "drawHungerOverlay", at = @At("HEAD"), cancellable = true, remap = false)
     private static void onDrawHungerOverlay(int hungerRestored, int foodLevel, Minecraft mc, GuiGraphics guiGraphics, int right, int top, float alpha, boolean useRottenTextures, CallbackInfo ci) { 
-        int maxLevel = FoodConfig.getMaxHungry();
+        int maxLevel = PlayerConfig.getMaxHungry();
         if (maxLevel >= 1000) maxLevel = 1000;
 
         if (hungerRestored <= 0) {

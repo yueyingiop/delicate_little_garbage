@@ -39,7 +39,7 @@ public class ItemConfig {
     }
 
     public static int getMaxStackSize(){
-        return data.get("maxStackSize").getAsInt();
+        return Math.min(1, Math.max(data.get("maxStackSize").getAsInt(), Integer.MAX_VALUE-1));
     }
 
     public static boolean getItemCooldowns(){

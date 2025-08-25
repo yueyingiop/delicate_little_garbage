@@ -9,13 +9,13 @@ import java.nio.file.Paths;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-public class FoodConfig {
+public class PlayerConfig {
     public static boolean init = false;
     public static JsonObject data = new JsonObject();
 
     public static void init() throws IOException {
         if(!init){
-            Path configPath = Paths.get("config/DLG/food-config.json");
+            Path configPath = Paths.get("config/DLG/player-config.json");
             File file = configPath.toFile();
 
             Path parentDir = configPath.getParent();
@@ -26,6 +26,8 @@ public class FoodConfig {
             if(!file.exists()){
                 JsonObject json = new JsonObject();
                 json.addProperty("alwaysEat",true);
+                json.addProperty("alwaysSleep",true);
+                json.addProperty("sleepDurationTime",12000);
 
                 JsonObject foodData = new JsonObject();
                 json.add("foodData", foodData);
@@ -47,15 +49,23 @@ public class FoodConfig {
         return data.get("alwaysEat").getAsBoolean();
     }
 
+    public static boolean getAlwaysSleep() {
+        return data.get("alwaysSleep").getAsBoolean();
+    }
+
+    public static int getSleepDurationTime() {
+        return Math.max(0, Math.min(data.get("sleepDurationTime").getAsInt(), 24000));
+    }
+
     private static JsonObject getFoodData(){
         return data.get("foodData").getAsJsonObject();
     }
 
     public static int getMaxHungry() {
-        return getFoodData().get("maxHungry").getAsInt();
+        return Math.max(1, Math.min(getFoodData().get("maxHungry").getAsInt(), Integer.MAX_VALUE-1));
     }
 
     public static int getMinHealFoodLevel() {
-        return getFoodData().get("minHealFoodLevel").getAsInt();
+        return Math.max(0, Math.min(getFoodData().get("minHealFoodLevel").getAsInt(), getMaxHungry()));
     }
 }

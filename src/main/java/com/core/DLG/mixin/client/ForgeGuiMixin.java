@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
-import com.core.DLG.configs.FoodConfig;
+import com.core.DLG.configs.PlayerConfig;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;
@@ -33,7 +33,7 @@ public abstract class ForgeGuiMixin extends Gui {
     */ 
     @Overwrite(remap = false)
     public void renderFood(int width, int height, GuiGraphics guiGraphics) throws IOException { 
-        FoodConfig.init();
+        PlayerConfig.init();
         this.minecraft.getProfiler().push("food");
         
         Player player = (Player) this.minecraft.getCameraEntity();
@@ -50,7 +50,7 @@ public abstract class ForgeGuiMixin extends Gui {
 
         FoodData stats = player.getFoodData();
         int level = stats.getFoodLevel();
-        int maxLevel = FoodConfig.getMaxHungry();
+        int maxLevel = PlayerConfig.getMaxHungry();
         if (maxLevel >= 1000) maxLevel = 1000;//设置最大渲染数，避免卡顿
         for (int num = (int) Math.ceil(maxLevel / 2.0); num > 0; num -= 10) {//10个图标一组
             for (int i = 0; i < (num - 10 > 0 ? 10 : num); ++i){
