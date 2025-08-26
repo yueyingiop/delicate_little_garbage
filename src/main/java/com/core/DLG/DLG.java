@@ -31,9 +31,9 @@ public class DLG
     public static final RegistryObject<CreativeModeTab> DLG_TAB = CREATIVE_MODE_TABS.register("dlg_tab", () -> CreativeModeTab.builder()
         .withTabsBefore(CreativeModeTabs.COMBAT)
         .title(Component.translatable("itemGroup.dlg_tab"))
-        .icon(() -> RegistryItem.PHONE.get().getDefaultInstance())
+        .icon(() -> RegistryItem.EQUIPMENT_DEBRIS.get().getDefaultInstance())
         .displayItems((parameters, output) -> {
-            output.accept(RegistryItem.PHONE.get());
+            output.accept(RegistryItem.EQUIPMENT_DEBRIS.get().getDefaultInstance());
         })
         .build()
     );

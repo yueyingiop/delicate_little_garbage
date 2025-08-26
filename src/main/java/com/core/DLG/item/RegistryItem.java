@@ -14,8 +14,13 @@ public class RegistryItem extends Item {
 
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, DLG.MODID);
 
-    public static final RegistryObject<Item> PHONE = ITEMS.register(
-        "phone", 
-        () -> new RegistryItem(new Item.Properties())
+    // public static final RegistryObject<Item> PHONE = ITEMS.register(
+    //     "phone", 
+    //     () -> new RegistryItem(new Item.Properties())
+    // );
+
+    public static final RegistryObject<Item> EQUIPMENT_DEBRIS = ITEMS.register(
+        "equipment_debris", 
+        () -> new DebrisItem("equipment_debris", new Item.Properties())
     );
 }

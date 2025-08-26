@@ -112,6 +112,7 @@ dependencies {
 
     // compileOnly fg.deobf("squeek.appleskin:appleskin-forge:${appleskin_version}:api") // 苹果皮API
     implementation fg.deobf("squeek.appleskin:appleskin-forge:${appleskin_version}") // 苹果皮
+    implementation fg.deobf("curse.maven:IBE-256822:4994072")
 
     // 使用 Mixin
     implementation 'org.spongepowered:mixin:0.8.5'
