@@ -2,5 +2,67 @@
   "parent": "item/generated",
   "textures": {
     "layer0": "delicate_little_garbage:item/equipment_debris"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "delicate_little_garbage:quality": 0.1
+      },
+      "model": "delicate_little_garbage:item/equipment_debris/equipment_debris_quality1"
+    },
+    {
+      "predicate": {
+        "delicate_little_garbage:quality": 0.2
+      },
+      "model": "delicate_little_garbage:item/equipment_debris/equipment_debris_quality2"
+    },
+    {
+      "predicate": {
+        "delicate_little_garbage:quality": 0.3
+      },
+      "model": "delicate_little_garbage:item/equipment_debris/equipment_debris_quality3"
+    },
+    {
+      "predicate": {
+        "delicate_little_garbage:quality": 0.4
+      },
+      "model": "delicate_little_garbage:item/equipment_debris/equipment_debris_quality4"
+    },
+    {
+      "predicate": {
+        "delicate_little_garbage:quality": 0.5
+      },
+      "model": "delicate_little_garbage:item/equipment_debris/equipment_debris_quality5"
+    },
+    {
+      "predicate": {
+        "delicate_little_garbage:quality": 0.6
+      },
+      "model": "delicate_little_garbage:item/equipment_debris/equipment_debris_quality6"
+    },
+    {
+      "predicate": {
+        "delicate_little_garbage:quality": 0.7
+      },
+      "model": "delicate_little_garbage:item/equipment_debris/equipment_debris_quality7"
+    },
+    {
+      "predicate": {
+        "delicate_little_garbage:quality": 0.8
+      },
+      "model": "delicate_little_garbage:item/equipment_debris/equipment_debris_quality8"
+    },
+    {
+      "predicate": {
+        "delicate_little_garbage:quality": 0.9
+      },
+      "model": "delicate_little_garbage:item/equipment_debris/equipment_debris_quality9"
+    },
+    {
+      "predicate": {
+        "delicate_little_garbage:quality": 1.0
+      },
+      "model": "delicate_little_garbage:item/equipment_debris/equipment_debris_undefined_quality"
+    }
+  ]
 }

@@ -1,3 +1,33 @@
 {
-    "tooltip.dlg.stackcount": "堆叠数: %s"
+    "item.delicate_little_garbage.equipment_debris": "装备碎片",
+
+    "tooltip.dlg.stackcount": "堆叠数: %s",
+
+    "tooltip.dlg.debris.type": "[类型]: %s",
+    "tooltip.dlg.debris.type.sword": "剑",
+    "tooltip.dlg.debris.type.shovel": "铲",
+    "tooltip.dlg.debris.type.pickaxe": "镐",
+    "tooltip.dlg.debris.type.axe": "斧",
+    "tooltip.dlg.debris.type.hoe": "锄",
+    "tooltip.dlg.debris.type.bow": "弓",
+    "tooltip.dlg.debris.type.crossbow": "弩",
+    "tooltip.dlg.debris.type.trident": "三叉戟",
+    "tooltip.dlg.debris.type.helmet": "头盔",
+    "tooltip.dlg.debris.type.chestplate": "胸甲",
+    "tooltip.dlg.debris.type.leggings": "护腿",
+    "tooltip.dlg.debris.type.boots": "靴子",
+    "tooltip.dlg.debris.type.undefined_type": "未定义",
+
+    "tooltip.dlg.debris.quality": "[品质]: %s",
+    "tooltip.dlg.debris.quality.quality1": "普通",
+    "tooltip.dlg.debris.quality.quality2": "良好",
+    "tooltip.dlg.debris.quality.quality3": "优质",
+    "tooltip.dlg.debris.quality.quality4": "精良",
+    "tooltip.dlg.debris.quality.quality5": "史诗",
+    "tooltip.dlg.debris.quality.quality6": "传说",
+    "tooltip.dlg.debris.quality.quality7": "神话",
+    "tooltip.dlg.debris.quality.quality8": "至尊",
+    "tooltip.dlg.debris.quality.quality9": "永恒",
+    "tooltip.dlg.debris.quality.default_quality": "默认",
+    "tooltip.dlg.debris.quality.undefined_quality": "未定义"
 }
