@@ -1,14 +1,12 @@
 {
     "required": true,
     "package": "com.core.DLG.mixin",
+    "plugin": "com.core.DLG.mixin.MixinPlugin",
     "compatibilityLevel": "JAVA_17",
     "refmap": "delicate_little_garbage.refmap.json",
     "mixins": [
-        "FontMixin",
         "ItemCooldownsMixin",
-        "client.ForgeGuiMixin",
-        "client.GuiGraphicsMixin",
-        "client.appleskin.HUDOverlayHandlerMixin",
+        "player.PlayerMixin",
         "player.food.FoodDataMixin",
         "player.food.FoodPropertiesMixin",
         "player.sleep.ForgeEventFactoryMixin",
@@ -28,6 +26,10 @@
         "itemStack.SuspiciousStewItemMixin"
     ],
     "client": [
+        "FontMixin",
+        "client.ForgeGuiMixin",
+        "client.GuiGraphicsMixin",
+        "client.appleskin.HUDOverlayHandlerMixin"
     ],
     "minVersion": "0.8.5"
 }

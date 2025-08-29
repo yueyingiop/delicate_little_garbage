@@ -13,6 +13,8 @@ import net.minecraft.world.item.ItemStack;
 
 @Mixin(GuiGraphics.class)
 public class GuiGraphicsMixin {
+
+    //#region 文本堆叠显示
     @Inject(
         method = "renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V",
         at = @At("HEAD")
@@ -100,4 +102,5 @@ public class GuiGraphicsMixin {
         }
         return String.format("%.1f", value);
     }
+    //#endregion
 }

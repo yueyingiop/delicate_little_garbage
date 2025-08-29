@@ -1,11 +1,10 @@
 package com.core.DLG.mixin;
 
-import java.lang.reflect.Method;
 import java.util.List;
 
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -17,23 +16,19 @@ import net.minecraft.client.renderer.MultiBufferSource;
 
 @Mixin(Font.class)
 public abstract class FontMixin {
-    @Unique
-    private static Method renderTextMethod;
 
-    static {
-        try {
-            // 使用反射获取 renderText 方法
-            renderTextMethod = Font.class.getDeclaredMethod(
-                "renderText", 
-                String.class, Float.TYPE, Float.TYPE, Integer.TYPE, Boolean.TYPE,
-                Matrix4f.class, MultiBufferSource.class, Font.DisplayMode.class,
-                Integer.TYPE, Integer.TYPE
-            );
-            renderTextMethod.setAccessible(true); // 设置可访问
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-    }
+    @Shadow
+    public abstract float renderText(
+        String text, 
+        float x, float y, 
+        int color, 
+        boolean shadow, 
+        Matrix4f matrix, 
+        MultiBufferSource buffer, 
+        Font.DisplayMode mode, 
+        int backgroundColor, 
+        int packedLight
+    );
 
     // 绘制文本
     @Inject(
@@ -58,15 +53,14 @@ public abstract class FontMixin {
             float currentX = x;
             try {
                 for (RGBSettings.ParsedSegment segment : segments) {
-                    // 使用反射调用 renderText 方法
-                    currentX = (Float) renderTextMethod.invoke(
-                        (Font) (Object) this,
+                    float width = renderText(
                         segment.text(), 
                         currentX, y, 
                         segment.color().orElse(color), 
                         shadow, matrix, buffer, mode, 
                         backgroundColor, packedLight
                     );
+                    currentX = width;
                 }
                 
                 cir.setReturnValue(currentX - x);
@@ -76,4 +70,5 @@ public abstract class FontMixin {
             }
         }
     }
+
 }
