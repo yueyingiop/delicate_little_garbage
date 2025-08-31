@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.WeakHashMap;
 import java.util.function.Function;
 import java.util.function.ToIntFunction;
 import java.util.regex.Matcher;
@@ -18,6 +20,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.util.Tuple;
 
 public class RGBSettings {
+    private static final Map<String, List<ParsedSegment>> TEXT_CACHE = new WeakHashMap<>();
     public static RGBSettings EMPTY;  // 默认
     public static final Pattern PATTERN;  // 正则
     private final List<IColor> colors;  // 颜色
@@ -266,32 +269,94 @@ public class RGBSettings {
     }
 
     public static List<ParsedSegment> parseText(String text) {
+        if (text.length() > 500) return Collections.singletonList(new ParsedSegment(text, Optional.of(0xFFFFFF))); // 长文本处理
+        if (TEXT_CACHE.containsKey(text)) {
+            return TEXT_CACHE.get(text);
+        } // 缓存
         List<ParsedSegment> result = new ArrayList<>();
-        Matcher matcher = PATTERN.matcher(text);
+        if (text == null || text.isEmpty()) {
+            result.add(new ParsedSegment("", Optional.of(0xFFFFFF)));
+            return result;
+        } // 文本空处理
+        // Matcher matcher = PATTERN.matcher(text);
         int lastIndex = 0;
         int currentColor = 0xFFFFFF; // 默认白色
+        int i = 0;
         
-        while (matcher.find()) {
-            // 添加之前的文本
-            if (lastIndex < matcher.start()) {
-                String plainText = text.substring(lastIndex, matcher.start());
-                result.add(new ParsedSegment(plainText, Optional.of(currentColor)));
-            }
-            
-            String format = matcher.group();
-            if (format.startsWith("#")) {
-                // 处理颜色代码
-                String colorStr = matcher.group("rgb");
-                currentColor = Colors.of(colorStr).toInt();
-            } else if (format.startsWith("§")) {
+        // while (matcher.find()) {
+        //     // 添加之前的文本
+        //     if (lastIndex < matcher.start()) {
+        //         String plainText = text.substring(lastIndex, matcher.start());
+        //         result.add(new ParsedSegment(plainText, Optional.of(currentColor)));
+        //     }
+        //
+        //     String format = matcher.group();
+        //     if (format.startsWith("#")) {
+        //         // 处理颜色代码
+        //         String colorStr = matcher.group("rgb");
+        //         currentColor = Colors.of(colorStr).toInt();
+        //     } else if (format.startsWith("§")) {
+        //         // 处理原版格式代码
+        //         ChatFormatting formatting = Utils.formattingOf(format.charAt(1));
+        //         if (formatting != null && formatting.isColor()) {
+        //             currentColor = Colors.of(formatting).toInt();
+        //         }
+        //     }
+        //
+        //     lastIndex = matcher.end();
+        // }
+
+        // 文字处理
+        while (i < text.length()) { 
+            // 查找颜色或格式代码
+            if (text.charAt(i) == '#' && i + 6 < text.length()) {
+                // 检查是否是有效的颜色代码
+                boolean isValidColor = true;
+                for (int j = i + 1; j <= i + 6; j++) {
+                    char c = text.charAt(j);
+                    if (!((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'))) {
+                        isValidColor = false;
+                        break;
+                    }
+                }
+                
+                if (isValidColor) {
+                    // 添加之前的文本
+                    if (lastIndex < i) {
+                        String plainText = text.substring(lastIndex, i);
+                        result.add(new ParsedSegment(plainText, Optional.of(currentColor)));
+                    }
+                    
+                    // 处理颜色代码
+                    String colorStr = text.substring(i + 1, i + 7);
+                    currentColor = Colors.of(colorStr).toInt();
+                    
+                    i += 7;
+                    lastIndex = i;
+                    continue;
+                }
+            } else if (text.charAt(i) == '§' && i + 1 < text.length()) {
                 // 处理原版格式代码
-                ChatFormatting formatting = Utils.formattingOf(format.charAt(1));
+                char formatChar = text.charAt(i + 1);
+                ChatFormatting formatting = Utils.formattingOf(formatChar);
+                
                 if (formatting != null && formatting.isColor()) {
+                    // 添加之前的文本
+                    if (lastIndex < i) {
+                        String plainText = text.substring(lastIndex, i);
+                        result.add(new ParsedSegment(plainText, Optional.of(currentColor)));
+                    }
+                    
+                    // 处理颜色格式代码
                     currentColor = Colors.of(formatting).toInt();
+                    
+                    i += 2;
+                    lastIndex = i;
+                    continue;
                 }
             }
             
-            lastIndex = matcher.end();
+            i++;
         }
         
         // 添加剩余的文本
@@ -300,6 +365,8 @@ public class RGBSettings {
             result.add(new ParsedSegment(remainingText, Optional.of(currentColor)));
         }
         
+
+        TEXT_CACHE.put(text, result); // 缓存解析
         return result;
     }
     public record ParsedSegment(String text, Optional<Integer> color) {}

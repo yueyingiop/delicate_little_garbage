@@ -25,14 +25,17 @@ public class PlayerConfig {
 
             if(!file.exists()){
                 JsonObject json = new JsonObject();
-                json.addProperty("alwaysEat",true);
-                json.addProperty("alwaysSleep",true);
-                json.addProperty("sleepDurationTime",12000);
+                json.addProperty("cancelAttackGap", true); // 是否取消攻击间隔
+                json.addProperty("cancelInvulnerableDuration", true); // 是否取消无伤害
+                json.addProperty("alwaysEat",true); // 是否总是吃
+                json.addProperty("alwaysSleep",true); // 是否总是睡觉
+                json.addProperty("sleepDurationTime",12000); // 睡觉时间
+                json.addProperty("sleepEverywhere",true); // 可以在任何地方睡觉
 
                 JsonObject foodData = new JsonObject();
                 json.add("foodData", foodData);
-                foodData.addProperty("maxHungry",20);
-                foodData.addProperty("minHealFoodLevel",18);
+                foodData.addProperty("maxHungry",40);
+                foodData.addProperty("minHealFoodLevel",20);
                 Files.write(file.toPath(),json.toString().getBytes());
             }
             data = JsonParser.parseString(Files.readString(file.toPath())).getAsJsonObject();
@@ -45,6 +48,14 @@ public class PlayerConfig {
         init();
     }
 
+    public static boolean getCancelAttackGap() {
+        return data.get("cancelAttackGap").getAsBoolean();
+    }
+
+    public static boolean getCancelInvulnerableDuration() {
+        return data.get("cancelInvulnerableDuration").getAsBoolean();
+    }
+
     public static boolean getAlwaysEat() {
         return data.get("alwaysEat").getAsBoolean();
     }
@@ -55,6 +66,10 @@ public class PlayerConfig {
 
     public static int getSleepDurationTime() {
         return Math.max(0, Math.min(data.get("sleepDurationTime").getAsInt(), 24000));
+    }
+
+    public static boolean getSleepEverywhere() {
+        return data.get("sleepEverywhere").getAsBoolean();
     }
 
     private static JsonObject getFoodData(){

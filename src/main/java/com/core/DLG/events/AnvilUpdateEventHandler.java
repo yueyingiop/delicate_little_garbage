@@ -1,20 +1,30 @@
 package com.core.DLG.events;
 
+import java.io.IOException;
+import java.util.Map;
+
 import com.core.DLG.DLG;
+import com.core.DLG.configs.EnchantmentConfig;
 import com.core.DLG.configs.ItemConfig;
 import com.core.DLG.enums.QualityEnum;
 import com.core.DLG.enums.TypeEnum;
 import com.core.DLG.item.RegistryItem;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod.EventBusSubscriber(modid = DLG.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class AnvilRepairEventHandler {
+public class AnvilUpdateEventHandler {
+    // 装备碎片修复装备
     @SubscribeEvent
     public static void debrisFixEquipments(AnvilUpdateEvent event){
         ItemStack leftItemStack = event.getLeft();
@@ -79,6 +89,27 @@ public class AnvilRepairEventHandler {
                 event.setMaterialCost(1);
             }
 
+        }
+    }
+
+    // 弩可附魔无限
+    @SubscribeEvent
+    public static void infinityCrossbow(AnvilUpdateEvent event) throws IOException {
+        EnchantmentConfig.init();
+        ItemStack leftItemStack = event.getLeft();
+        ItemStack rightItemStack = event.getRight();
+
+        if (leftItemStack.getItem() instanceof CrossbowItem && rightItemStack.getItem() == Items.ENCHANTED_BOOK && EnchantmentConfig.getInfinityCrossbow()) {
+            EnchantmentHelper.getEnchantments(rightItemStack).forEach((enchantment, level) -> {
+                if (enchantment == Enchantments.INFINITY_ARROWS) {
+                    Map<Enchantment, Integer> leftEnchants = EnchantmentHelper.getEnchantments(leftItemStack);
+                    leftEnchants.put(enchantment, level);
+                    ItemStack output = leftItemStack.copy();
+                    EnchantmentHelper.setEnchantments(leftEnchants, output);
+                    event.setOutput(output);
+                    event.setCost(5);
+                }
+            });
         }
     }
 }

@@ -6,9 +6,16 @@
     "refmap": "delicate_little_garbage.refmap.json",
     "mixins": [
         "ItemCooldownsMixin",
-        "player.PlayerMixin",
+        "enchantment.ArrowInfiniteEnchantmentMixin",
+        "enchantment.ArrowPiercingEnchantmentMixin",
+        "enchantment.CrossbowItemMixin",
+        "enchantment.DamageEnchantmentMixin",
+        "enchantment.MultiShotEnchantmentMixin",
+        "enchantment.ProtectionEnchantmentMixin",
+        "player.LivingEntityMixin",
         "player.food.FoodDataMixin",
         "player.food.FoodPropertiesMixin",
+        "player.sleep.DimensionTypeMixin",
         "player.sleep.ForgeEventFactoryMixin",
         "player.sleep.ServerLevelSleepMixin",
         "player.sleep.ServerPlayerSleepMixin",
@@ -26,7 +33,7 @@
         "itemStack.SuspiciousStewItemMixin"
     ],
     "client": [
-        "FontMixin",
+        "client.FontMixin",
         "client.ForgeGuiMixin",
         "client.GuiGraphicsMixin",
         "client.appleskin.HUDOverlayHandlerMixin"

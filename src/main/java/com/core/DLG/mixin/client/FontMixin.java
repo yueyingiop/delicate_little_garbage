@@ -1,10 +1,11 @@
-package com.core.DLG.mixin;
+package com.core.DLG.mixin.client;
 
 import java.util.List;
 
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -30,6 +31,9 @@ public abstract class FontMixin {
         int packedLight
     );
 
+    @Unique
+    private boolean dlg$processing = false;
+
     // 绘制文本
     @Inject(
         method = "renderText(Ljava/lang/String;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)F", 
@@ -48,10 +52,14 @@ public abstract class FontMixin {
         int packedLight, 
         CallbackInfoReturnable<Float> cir
     ) {
+        if (dlg$processing) {
+            return;
+        }
         if (text != null && text.contains("#")){
-            List<RGBSettings.ParsedSegment> segments = RGBSettings.parseText(text);
-            float currentX = x;
+            dlg$processing = true;
             try {
+                List<RGBSettings.ParsedSegment> segments = RGBSettings.parseText(text);
+                float currentX = x;
                 for (RGBSettings.ParsedSegment segment : segments) {
                     float width = renderText(
                         segment.text(), 
@@ -67,6 +75,8 @@ public abstract class FontMixin {
                 cir.cancel();
             } catch (Exception e) {
                 e.printStackTrace();
+            } finally {
+                dlg$processing = false;
             }
         }
     }

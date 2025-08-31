@@ -51,8 +51,6 @@ public abstract class ItemStackMixin {
         ItemConfig.init();
         CODEC = RecordCodecBuilder.create((instance)->{
             return instance.group(
-                // BuiltInRegistries.ITEM.byNameCodec().fieldOf("id").forGetter(ItemStack::getItem),
-                // ExtraCodecs.intRange(1, Integer.MAX_VALUE).fieldOf("Count").orElse(1).forGetter(ItemStack::getCount),
                 ForgeRegistries.ITEMS.getCodec().fieldOf("id").forGetter(ItemStack::getItem),
                 Codec.INT.fieldOf("Count").forGetter(ItemStack::getCount),
                 CompoundTag.CODEC.optionalFieldOf("tag").forGetter((stack) -> {
