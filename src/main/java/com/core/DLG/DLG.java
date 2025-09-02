@@ -17,6 +17,7 @@ import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.core.DLG.attributes.RegistryAttribute;
 import com.core.DLG.configs.ItemConfig;
 import com.core.DLG.item.RegistryItem;
 
@@ -43,6 +44,7 @@ public class DLG
     {
         IEventBus modEventBus = context.getModEventBus();
         RegistryItem.ITEMS.register(modEventBus);
+        RegistryAttribute.ATTRIBUTES.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
         
         

@@ -36,6 +36,8 @@ public class EnchantmentConfig {
                 cancelEnchantmentCombat.addProperty("pierceAndMutiShooting", true);
 
                 Files.write(file.toPath(),json.toString().getBytes());
+            } else {
+                detectConfig();
             }
             data = JsonParser.parseString(Files.readString(file.toPath())).getAsJsonObject();
             init = true;
@@ -45,6 +47,32 @@ public class EnchantmentConfig {
     public static void reload() throws IOException {
         init = false;
         init();
+    }
+
+    public static void detectConfig() throws IOException {
+        Path configPath = Paths.get("config/DLG/enchantment-config.json");
+        File file = configPath.toFile();
+        int isTrue = 0;
+        JsonObject currentData = JsonParser.parseString(Files.readString(file.toPath())).getAsJsonObject();
+        if (currentData.get("trulyInfinite")==null) {
+            currentData.addProperty("trulyInfinite", true);
+            isTrue++;
+        }
+        if (currentData.get("infinityCrossbow")==null) {
+            currentData.addProperty("infinityCrossbow", true);
+            isTrue++;
+        }
+        if (currentData.get("cancelEnchantmentCombat")==null) {
+            JsonObject cancelEnchantmentCombat = new JsonObject();
+            currentData.add("cancelEnchantmentCombat", cancelEnchantmentCombat);
+            cancelEnchantmentCombat.addProperty("attack", true);
+            cancelEnchantmentCombat.addProperty("protection", true);
+            cancelEnchantmentCombat.addProperty("infiniteAndMending", true);
+            cancelEnchantmentCombat.addProperty("pierceAndMutiShooting", true);
+            isTrue++;
+        }
+        if (isTrue > 0) Files.write(file.toPath(),currentData.toString().getBytes());
+        data = currentData;
     }
 
     public static boolean getTrulyInfinite() {

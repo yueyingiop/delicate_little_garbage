@@ -4,12 +4,13 @@ license="All rights reserved"  # 许可证,必填
 
 [[mods]]  # mod信息,必填
 modId="delicate_little_garbage"  # modid,必填
-version="0.0.1-bata"  # mod版本,必填
+version="0.0.7-bata"  # mod版本,必填
 displayName="DLG"  # mod显示名称,必填
-# logoFile="pack.png"  # mod图标,选填
+logoFile="logo.png"  # mod图标,选填
 authors="yueyingiop"  # mod作者,选填
 description='''
-使用JavaScript编写UI界面的模组
+    修改了一些原版的机制
+    可以通过配置文件启用哪些功能
 '''  # mod描述,必填
 
 [[dependencies.delicate_little_garbage]]  # mod依赖,选填

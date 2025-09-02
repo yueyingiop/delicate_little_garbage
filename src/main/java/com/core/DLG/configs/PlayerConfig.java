@@ -37,6 +37,8 @@ public class PlayerConfig {
                 foodData.addProperty("maxHungry",40);
                 foodData.addProperty("minHealFoodLevel",20);
                 Files.write(file.toPath(),json.toString().getBytes());
+            } else {
+                detectConfig();
             }
             data = JsonParser.parseString(Files.readString(file.toPath())).getAsJsonObject();
             init = true;
@@ -46,6 +48,46 @@ public class PlayerConfig {
     public static void reload() throws IOException {
         init = false;
         init();
+    }
+
+    public static void detectConfig() throws IOException {
+        Path configPath = Paths.get("config/DLG/player-config.json");
+        File file = configPath.toFile();
+        int isTrue = 0;
+        JsonObject currentData = JsonParser.parseString(Files.readString(file.toPath())).getAsJsonObject();
+        if (currentData.get("cancelAttackGap")==null) {
+            currentData.addProperty("cancelAttackGap", true);
+            isTrue++;
+        }
+        if (currentData.get("cancelInvulnerableDuration")==null) {
+            currentData.addProperty("cancelInvulnerableDuration", true);
+            isTrue++;
+        }
+        if (currentData.get("alwaysEat")==null) {
+            currentData.addProperty("alwaysEat",true);
+            isTrue++;
+        }
+        if (currentData.get("alwaysSleep")==null) {
+            currentData.addProperty("alwaysSleep",true);
+            isTrue++;
+        }
+        if (currentData.get("sleepDurationTime")==null) {
+            currentData.addProperty("sleepDurationTime",12000);
+            isTrue++;
+        }
+        if (currentData.get("sleepEverywhere")==null) {
+            currentData.addProperty("sleepEverywhere",true);
+            isTrue++;
+        }
+        if (currentData.get("foodData")==null) {
+            JsonObject foodData = new JsonObject();
+            currentData.add("foodData", foodData);
+            foodData.addProperty("maxHungry",40);
+            foodData.addProperty("minHealFoodLevel",20);
+            isTrue++;
+        }
+        if (isTrue > 0) Files.write(file.toPath(),currentData.toString().getBytes());
+        data = currentData;
     }
 
     public static boolean getCancelAttackGap() {

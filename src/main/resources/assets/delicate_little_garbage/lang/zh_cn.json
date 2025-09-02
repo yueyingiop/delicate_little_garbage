@@ -29,5 +29,9 @@
     "tooltip.dlg.debris.quality.quality8": "至尊",
     "tooltip.dlg.debris.quality.quality9": "永恒",
     "tooltip.dlg.debris.quality.default_quality": "默认",
-    "tooltip.dlg.debris.quality.undefined_quality": "未定义"
+    "tooltip.dlg.debris.quality.undefined_quality": "未定义",
+
+    "attribute.dlg.critical_chance": "暴击率",
+    "attribute.dlg.critical_damage": "暴击伤害"
+
 }

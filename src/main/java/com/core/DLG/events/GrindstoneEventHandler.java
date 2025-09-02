@@ -14,6 +14,8 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = DLG.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class GrindstoneEventHandler {
+
+    // 砂轮清除碎片类型
     @SubscribeEvent
     public static void clearDebrisType(GrindstoneEvent.OnPlaceItem event) {
         ItemStack topItem = event.getTopItem();

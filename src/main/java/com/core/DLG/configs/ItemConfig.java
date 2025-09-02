@@ -29,7 +29,8 @@ public class ItemConfig {
                 JsonObject json = new JsonObject();
                 json.addProperty("maxStackSize",65525);
                 json.addProperty("itemCooldowns",true);
-                
+
+                // 装备碎片
                 JsonObject equipmentDebris = new JsonObject();
                 JsonArray configList = new JsonArray();
                 JsonArray alwaysList = new JsonArray();
@@ -41,16 +42,71 @@ public class ItemConfig {
                 equipmentDebris.add("alwaysList", alwaysList);
                 alwaysList.add("forge:armors");
                 alwaysList.add("forge:tools");
+
+                // 自定义双爆
+                JsonObject C2C = new JsonObject();
+                JsonArray C2CItemList = new JsonArray();
+                json.add("C&C", C2C);
+                C2C.addProperty("customC&C", true);
+                C2C.addProperty("playerDefaultCriticalChance", 0.05D);
+                C2C.addProperty("playerDefaultCriticalDamage", 0.5D);
+                C2C.add("C&CItemList", C2CItemList);
+                C2CItemListInit(C2CItemList);
                 Files.write(file.toPath(),json.toString().getBytes());
+            } else {
+                detectConfig();
             }
             data = JsonParser.parseString(Files.readString(file.toPath())).getAsJsonObject();
             init = true;
         }
     }
 
+    //#region 配置加载函数
     public static void reload() throws IOException {
         init = false;
         init();
+    }
+
+    public static void detectConfig() throws IOException {
+        Path configPath = Paths.get("config/DLG/item-config.json");
+        File file = configPath.toFile();
+        JsonObject currentData = JsonParser.parseString(Files.readString(file.toPath())).getAsJsonObject();
+        int isTrue = 0;
+        if (currentData.get("maxStackSize") == null) {
+            currentData.addProperty("maxStackSize",65525);
+            isTrue++;
+        }
+        if (currentData.get("itemCooldowns") == null) {
+            currentData.addProperty("itemCooldowns",true);
+            isTrue++;
+        }
+        if (currentData.get("equipmentDebris") == null) {
+            JsonObject equipmentDebris = new JsonObject();
+            JsonArray configList = new JsonArray();
+            JsonArray alwaysList = new JsonArray();
+            currentData.add("equipmentDebris",equipmentDebris);
+            equipmentDebris.addProperty("itemBrokenDrops",true);
+            equipmentDebris.addProperty("alwaysDrops", true);
+            equipmentDebris.add("configList",configList);
+            configListInit(configList);
+            equipmentDebris.add("alwaysList", alwaysList);
+            alwaysList.add("forge:armors");
+            alwaysList.add("forge:tools");
+            isTrue++;
+        }
+        if (currentData.get("C&C") == null) {
+            JsonObject C2C = new JsonObject();
+            JsonArray C2CItemList = new JsonArray();
+            currentData.add("C&C", C2C);
+            C2C.addProperty("customC&C", true);
+            C2C.addProperty("playerDefaultCriticalChance", 0.05D);
+            C2C.addProperty("playerDefaultCriticalDamage", 0.5D);
+            C2C.add("C&CItemList", C2CItemList);
+            C2CItemListInit(C2CItemList);
+            isTrue++;
+        }
+        if (isTrue > 0) Files.write(file.toPath(),currentData.toString().getBytes());
+        data = currentData;
     }
 
     private static void configListInit(JsonArray configList) {
@@ -209,6 +265,26 @@ public class ItemConfig {
         }
     }
 
+    private static void C2CItemListInit(JsonArray configList){ 
+        String[] C2CItems = {
+            "minecraft:netherite_sword"
+        };
+        Double[] itemCriticalChance = {
+            0.15D
+        };
+        Double[] itemCriticalDamage = {
+            0.5D
+        };
+        for (int i = 0; i < C2CItems.length; i++) { 
+            JsonObject itemConfig = new JsonObject();
+            itemConfig.addProperty("item", C2CItems[i]);
+            itemConfig.addProperty("criticalChance", itemCriticalChance[i]);
+            itemConfig.addProperty("criticalDamage", itemCriticalDamage[i]);
+            configList.add(itemConfig);
+        }
+    }
+    //#endregion
+    
     public static int getMaxStackSize(){
         return Math.max(1, Math.min(data.get("maxStackSize").getAsInt(), Integer.MAX_VALUE-1));
     }
@@ -268,6 +344,7 @@ public class ItemConfig {
     public static JsonArray getAlwaysList(){
         return getEquipmentDebris().get("alwaysList").getAsJsonArray();
     }
+
     public static boolean itemInAlwaysList(String itemName) {
         JsonArray alwaysList = getAlwaysList();
         for(int i = 0; i < alwaysList.size(); i++) {
