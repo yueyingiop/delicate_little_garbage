@@ -1,6 +1,9 @@
 package com.core.DLG.events;
 
+import java.io.IOException;
+
 import com.core.DLG.DLG;
+import com.core.DLG.configs.ItemConfig;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -14,7 +17,10 @@ import net.minecraftforge.fml.common.Mod;
 public class LivingHurtEventHandler {
     
     @SubscribeEvent
-    public static void onLivingHurt(LivingHurtEvent event) {
+    public static void onLivingHurt(LivingHurtEvent event) throws IOException {
+        ItemConfig.init();
+        if (!ItemConfig.getCustomC2C()) return; // 检测是否开启自定义双爆
+
         DamageSource source = event.getSource();
         
         // 检查伤害来源是否是玩家

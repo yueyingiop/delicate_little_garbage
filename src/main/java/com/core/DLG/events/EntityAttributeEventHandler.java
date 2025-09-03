@@ -1,7 +1,10 @@
 package com.core.DLG.events;
 
+import java.io.IOException;
+
 import com.core.DLG.DLG;
 import com.core.DLG.attributes.RegistryAttribute;
+import com.core.DLG.configs.ItemConfig;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,12 +18,14 @@ public class EntityAttributeEventHandler {
 
     // 为玩家添加属性
     @SubscribeEvent
-    public static void onEntityAttributeModification(EntityAttributeModificationEvent  event) {
-        detectAndAdd(event, EntityType.PLAYER, RegistryAttribute.CRITICAL_CHANCE.get());
-        detectAndAdd(event, EntityType.PLAYER, RegistryAttribute.CRITICAL_DAMAGE.get());
-        
+    public static void onEntityAttributeModification(EntityAttributeModificationEvent  event)  throws IOException  {
+        ItemConfig.init();
+        if (ItemConfig.getCustomC2C()) {
+            detectAndAdd(event, EntityType.PLAYER, RegistryAttribute.CRITICAL_CHANCE.get());
+            detectAndAdd(event, EntityType.PLAYER, RegistryAttribute.CRITICAL_DAMAGE.get());
+        }
     }
-    public static void detectAndAdd(EntityAttributeModificationEvent event, EntityType<? extends LivingEntity> entityType, Attribute attribute) {
+    public static void detectAndAdd(EntityAttributeModificationEvent event, EntityType<? extends LivingEntity> entityType, Attribute attribute){
         if (!event.has(entityType, attribute)) event.add(entityType, attribute);
     }
 

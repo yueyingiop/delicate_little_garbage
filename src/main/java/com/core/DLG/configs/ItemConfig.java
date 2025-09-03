@@ -90,8 +90,8 @@ public class ItemConfig {
             equipmentDebris.add("configList",configList);
             configListInit(configList);
             equipmentDebris.add("alwaysList", alwaysList);
-            alwaysList.add("forge:armors");
-            alwaysList.add("forge:tools");
+            alwaysList.add("#forge:armors");
+            alwaysList.add("#forge:tools");
             isTrue++;
         }
         if (currentData.get("C&C") == null) {
@@ -267,13 +267,16 @@ public class ItemConfig {
 
     private static void C2CItemListInit(JsonArray configList){ 
         String[] C2CItems = {
-            "minecraft:netherite_sword"
+            "#minecraft:swords",
+            "#minecraft:axes",
         };
         Double[] itemCriticalChance = {
-            0.15D
+            0.15D,
+            0.25D
         };
         Double[] itemCriticalDamage = {
-            0.5D
+            0.5D,
+            0.7D
         };
         for (int i = 0; i < C2CItems.length; i++) { 
             JsonObject itemConfig = new JsonObject();
@@ -357,6 +360,58 @@ public class ItemConfig {
             }
         }
         return false;
+    }
+
+    private static JsonObject getC2C(){
+        return data.get("C&C").getAsJsonObject();
+    }
+
+    public static boolean getCustomC2C() {
+        return getC2C().get("customC&C").getAsBoolean();
+    }
+
+    public static Double getPlayerDefaultCriticalChance() {
+        return getC2C().get("playerDefaultCriticalChance").getAsDouble();
+    }
+
+    public static Double getPlayerDefaultCriticalDamage() {
+        return getC2C().get("playerDefaultCriticalDamage").getAsDouble();
+    }
+
+    public static JsonArray getC2CItemList(){
+        return getC2C().get("C&CItemList").getAsJsonArray();
+    }
+
+    public static boolean itemInC2CItemList(String itemName) { 
+        JsonArray C2CItemList = getC2CItemList();
+        for(int i = 0; i < C2CItemList.size(); i++) { 
+            JsonObject itemConfig = C2CItemList.get(i).getAsJsonObject();
+            if (
+                itemConfig.has("item") &&
+                formatItemName(
+                    itemConfig.get("item").getAsString()
+                ).equals(itemName)
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static JsonObject getC2CItemConfig(String itemName) { 
+        JsonArray C2CItemList = getC2CItemList();
+        for(int i = 0; i < C2CItemList.size(); i++) { 
+                JsonObject itemConfig = C2CItemList.get(i).getAsJsonObject();
+                if (
+                    itemConfig.has("item") &&
+                    formatItemName(
+                        itemConfig.get("item").getAsString()
+                    ).equals(itemName)
+                ) {
+                    return itemConfig;
+                }
+            }
+        return null;
     }
 
     // 格式化文字

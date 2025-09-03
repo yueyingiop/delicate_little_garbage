@@ -1,14 +1,16 @@
 package com.core.DLG.events;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import com.core.DLG.DLG;
 import com.core.DLG.attributes.RegistryAttribute;
-
+import com.core.DLG.configs.ItemConfig;
 
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.ItemAttributeModifierEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -21,27 +23,38 @@ public class ItemAttributeEventHandler {
 
     // 为物品添加属性
     @SubscribeEvent
-    public static void onItemAttributeModifier(ItemAttributeModifierEvent event){
-        String itemId  = ForgeRegistries.ITEMS.getKey(event.getItemStack().getItem()).toString();
-        if (itemId.equals("minecraft:netherite_sword") && event.getSlotType() == EquipmentSlot.MAINHAND) {
-            event.addModifier(
-                RegistryAttribute.CRITICAL_CHANCE.get(),
-                new AttributeModifier(
-                    CRITICAL_CHANCE_UUID,
-                    "dlg.critical_chance",
-                    0.15D,
-                    Operation.ADDITION
-                )
-            );
-            event.addModifier(
-                RegistryAttribute.CRITICAL_DAMAGE.get(),
-                new AttributeModifier(
-                    CRITICAL_DAMAGE_UUID,
-                    "dlg.critical_damage",
-                    0.5D,
-                    Operation.ADDITION
-                )
-            );
+    public static void onItemAttributeModifier(ItemAttributeModifierEvent event) throws IOException {
+        ItemConfig.init();
+        if (!ItemConfig.getCustomC2C()) return; // 检测是否开启自定义双爆
+
+        ItemStack itemStack = event.getItemStack();
+        String itemId  = ForgeRegistries.ITEMS.getKey(itemStack.getItem()).toString();
+        for (var tagkey : itemStack.getTags().toList()) {
+            Boolean isTrue = ItemConfig.itemInC2CItemList(itemId) || ItemConfig.itemInC2CItemList(tagkey.location().toString());
+            if (isTrue && event.getSlotType() == EquipmentSlot.MAINHAND) {
+                String name = ItemConfig.itemInC2CItemList(itemId) ? itemId : tagkey.location().toString();
+                Double criticalChance = ItemConfig.getC2CItemConfig(name).get("criticalChance").getAsDouble();
+                Double criticalDamage = ItemConfig.getC2CItemConfig(name).get("criticalDamage").getAsDouble();
+                event.addModifier(
+                    RegistryAttribute.CRITICAL_CHANCE.get(),
+                    new AttributeModifier(
+                        CRITICAL_CHANCE_UUID,
+                        "dlg.critical_chance",
+                        criticalChance,
+                        Operation.ADDITION
+                    )
+                );
+                event.addModifier(
+                    RegistryAttribute.CRITICAL_DAMAGE.get(),
+                    new AttributeModifier(
+                        CRITICAL_DAMAGE_UUID,
+                        "dlg.critical_damage",
+                        criticalDamage,
+                        Operation.ADDITION
+                    )
+                );
+                return;
+            }
         }
     }
 }

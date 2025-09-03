@@ -44,7 +44,7 @@ public class DLG
     {
         IEventBus modEventBus = context.getModEventBus();
         RegistryItem.ITEMS.register(modEventBus);
-        RegistryAttribute.ATTRIBUTES.register(modEventBus);
+        RegistryAttribute(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
         
         
@@ -57,6 +57,18 @@ public class DLG
 
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
 
+
+    }
+
+    private void RegistryAttribute(IEventBus modEventBus){
+        try {
+            ItemConfig.init();
+            if (ItemConfig.getCustomC2C()) {
+                RegistryAttribute.ATTRIBUTES.register(modEventBus);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
     }
 }
