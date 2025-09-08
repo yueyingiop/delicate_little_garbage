@@ -1,11 +1,20 @@
 package com.core.DLG.init;
 
 import com.core.DLG.DLG;
+import com.core.DLG.block.RegistryBlock;
+import com.core.DLG.block.entity.RegistryBlockEntity;
+import com.core.DLG.block.entity.client.CraftingBlockEntityRender;
+import com.core.DLG.inventory.CraftingBlockScreen;
+import com.core.DLG.inventory.RegistryMenu;
 import com.core.DLG.item.RegistryItem;
 
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.client.event.EntityRenderersEvent.RegisterRenderers;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -17,6 +26,7 @@ public class ClientSetup {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
+            //#region 注册装备碎片品质图标
             ItemProperties.register(
                 RegistryItem.EQUIPMENT_DEBRIS.get(), 
                 ResourceLocation.fromNamespaceAndPath(DLG.MODID, "quality"), 
@@ -46,6 +56,28 @@ public class ClientSetup {
                     return 1.0F;
                 }
             );
+            //#endregion
+
+            // 设置方块渲染层透明
+            ItemBlockRenderTypes.setRenderLayer(
+                RegistryBlock.DEBRIS_SMITHING_TABLE.get(), 
+                RenderType.translucent()
+            );
+
+            // 设置gui渲染
+            MenuScreens.register(
+                RegistryMenu.CRAFTING_BLOCK_MENU.get(), 
+                CraftingBlockScreen::new
+            );
         });
+    }
+
+    // 注册方块模型
+    @SubscribeEvent
+    public static void registerRenderers(RegisterRenderers event) {
+        event.registerBlockEntityRenderer(
+            RegistryBlockEntity.DEBRIS_SMITHING_TABLE_ENTITY.get(), 
+            CraftingBlockEntityRender::new
+        );
     }
 }

@@ -18,7 +18,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.core.DLG.attributes.RegistryAttribute;
+import com.core.DLG.block.RegistryBlock;
+import com.core.DLG.block.entity.RegistryBlockEntity;
 import com.core.DLG.configs.ItemConfig;
+import com.core.DLG.inventory.RegistryMenu;
 import com.core.DLG.item.RegistryItem;
 
 @Mod(DLG.MODID)
@@ -35,6 +38,7 @@ public class DLG
         .icon(() -> RegistryItem.EQUIPMENT_DEBRIS.get().getDefaultInstance())
         .displayItems((parameters, output) -> {
             output.accept(RegistryItem.EQUIPMENT_DEBRIS.get().getDefaultInstance());
+            output.accept(RegistryItem.DEBRIS_SMITHING_TABLE_ITEM.get().getDefaultInstance());
         })
         .build()
     );
@@ -43,6 +47,9 @@ public class DLG
     public DLG(FMLJavaModLoadingContext context)
     {
         IEventBus modEventBus = context.getModEventBus();
+        RegistryMenu.MENUS.register(modEventBus);
+        RegistryBlockEntity.BLOCK_ENTITIES.register(modEventBus);
+        RegistryBlock.BLOCKS.register(modEventBus);
         RegistryItem.ITEMS.register(modEventBus);
         RegistryAttribute(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);

@@ -8,9 +8,13 @@ import java.nio.file.Paths;
 
 import com.core.DLG.enums.QualityEnum;
 import com.core.DLG.enums.TypeEnum;
+import com.core.DLG.item.RegistryItem;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class ItemConfig {
     public static boolean init = false;
@@ -34,6 +38,8 @@ public class ItemConfig {
                 JsonObject equipmentDebris = new JsonObject();
                 JsonArray configList = new JsonArray();
                 JsonArray alwaysList = new JsonArray();
+                JsonArray upgradeMaterials = new JsonArray();
+                JsonArray expMaterials = new JsonArray();
                 json.add("equipmentDebris",equipmentDebris);
                 equipmentDebris.addProperty("itemBrokenDrops",true);
                 equipmentDebris.addProperty("alwaysDrops", true);
@@ -42,6 +48,10 @@ public class ItemConfig {
                 equipmentDebris.add("alwaysList", alwaysList);
                 alwaysList.add("forge:armors");
                 alwaysList.add("forge:tools");
+                equipmentDebris.add("upgradeMaterials",upgradeMaterials);
+                equipmentDebris.add("expMaterials",expMaterials);
+                upgradeMaterialsInit(upgradeMaterials);
+                expMaterialsInit(expMaterials);
 
                 // 自定义双爆
                 JsonObject C2C = new JsonObject();
@@ -67,6 +77,7 @@ public class ItemConfig {
         init();
     }
 
+    // 自动检测配置文件缺失项并补全
     public static void detectConfig() throws IOException {
         Path configPath = Paths.get("config/DLG/item-config.json");
         File file = configPath.toFile();
@@ -84,6 +95,8 @@ public class ItemConfig {
             JsonObject equipmentDebris = new JsonObject();
             JsonArray configList = new JsonArray();
             JsonArray alwaysList = new JsonArray();
+            JsonArray upgradeMaterials = new JsonArray();
+            JsonArray expMaterials = new JsonArray();
             currentData.add("equipmentDebris",equipmentDebris);
             equipmentDebris.addProperty("itemBrokenDrops",true);
             equipmentDebris.addProperty("alwaysDrops", true);
@@ -92,6 +105,10 @@ public class ItemConfig {
             equipmentDebris.add("alwaysList", alwaysList);
             alwaysList.add("#forge:armors");
             alwaysList.add("#forge:tools");
+            equipmentDebris.add("upgradeMaterials",upgradeMaterials);
+            equipmentDebris.add("expMaterials",expMaterials);
+            upgradeMaterialsInit(upgradeMaterials);
+            expMaterialsInit(expMaterials);
             isTrue++;
         }
         if (currentData.get("C&C") == null) {
@@ -109,6 +126,7 @@ public class ItemConfig {
         data = currentData;
     }
 
+    // 装备碎片配置列表初始化
     private static void configListInit(JsonArray configList) {
         String[] specialItems = {
             "minecraft:trident",
@@ -265,6 +283,7 @@ public class ItemConfig {
         }
     }
 
+    // C&C物品配置列表初始化
     private static void C2CItemListInit(JsonArray configList){ 
         String[] C2CItems = {
             "#minecraft:swords",
@@ -286,6 +305,39 @@ public class ItemConfig {
             configList.add(itemConfig);
         }
     }
+
+    // 升级材料初始化
+    public static void upgradeMaterialsInit(JsonArray configList){ 
+        String[] upgradeMaterials = {
+            "#minecraft:stone_tool_materials",
+            "minecraft:iron_ingot",
+            "minecraft:gold_ingot",
+            "minecraft:diamond",
+            "minecraft:netherite_ingot",
+            "minecraft:nether_star"
+        };
+        for (int i = 0; i < upgradeMaterials.length; i++) { 
+            JsonObject itemConfig = new JsonObject();
+            itemConfig.addProperty("quality", i+1);
+            itemConfig.addProperty("upgradeMaterial", upgradeMaterials[i]);
+            configList.add(itemConfig);
+        }
+    }
+    // 经验材料初始化
+    public static void expMaterialsInit(JsonArray configList){
+        String[] MaterialList = {
+            "minecraft:stone"
+        };
+        int[] expList = {
+            100
+        };
+        for (int i = 0; i < MaterialList.length; i++) { 
+            JsonObject itemConfig = new JsonObject();
+            itemConfig.addProperty("expMaterial", MaterialList[i]);
+            itemConfig.addProperty("exp", expList[i]);
+            configList.add(itemConfig);
+        }
+    }
     //#endregion
     
     public static int getMaxStackSize(){
@@ -296,6 +348,7 @@ public class ItemConfig {
         return data.get("itemCooldowns").getAsBoolean();
     }
 
+    //#region 装备碎片配置相关函数
     private static JsonObject getEquipmentDebris(){ 
         return data.get("equipmentDebris").getAsJsonObject();
     }
@@ -362,6 +415,106 @@ public class ItemConfig {
         return false;
     }
 
+    // 升级材料列表
+    public static JsonArray getupgradeMaterialsList(){
+        return getEquipmentDebris().get("upgradeMaterials").getAsJsonArray();
+    }
+
+    // 升级材料是否在列表内
+    public static boolean itemInUpgradeMaterialsList(String itemName) {
+        JsonArray upgradeMaterialsList = getupgradeMaterialsList();
+        for(int i = 0; i < upgradeMaterialsList.size(); i++) { 
+            JsonObject itemConfig = upgradeMaterialsList.get(i).getAsJsonObject();
+            if (
+                itemConfig.has("upgradeMaterial") &&
+                formatItemName(
+                    itemConfig.get("upgradeMaterial").getAsString()
+                ).equals(itemName)
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    // 升级检测
+    public static boolean upgradeDetect(ItemStack itemStack, ItemStack materialStack) {
+        if (itemStack.isEmpty() || materialStack.isEmpty()) return false;
+        if (itemStack.getItem() != RegistryItem.EQUIPMENT_DEBRIS.get()) return false;
+        int itemQuality = itemStack.getOrCreateTag().getInt("quality");
+        if (itemQuality <= 0) return false;
+        JsonArray itemConfig = getupgradeMaterialsList();
+
+        String materialId = ForgeRegistries.ITEMS.getKey(materialStack.getItem()).toString();
+        Boolean isTrue = false;
+        for (var tagkey : materialStack.getTags().toList()) {
+            isTrue = itemInUpgradeMaterialsList(materialId) || itemInUpgradeMaterialsList(tagkey.location().toString());
+            if (isTrue) break;
+        }
+        // 获取升级材料
+        for(int i = 0; i < itemConfig.size(); i++) { 
+            JsonObject itemMaterial = itemConfig.get(i).getAsJsonObject();
+            if (
+                itemMaterial.get("quality").getAsInt() == itemQuality && isTrue
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    // 经验材料列表
+    public static JsonArray getExpMaterialsList() { 
+        return getEquipmentDebris().get("expMaterials").getAsJsonArray();
+    }
+    
+    // 经验材料是否在列表内(String)
+    public static boolean itemInExpMaterialsList(String itemName) { 
+        JsonArray expMaterialsList = getExpMaterialsList();
+        for(int i = 0; i < expMaterialsList.size(); i++) { 
+            JsonObject itemConfig = expMaterialsList.get(i).getAsJsonObject();
+            if (
+                itemConfig.has("expMaterial") &&
+                formatItemName(
+                    itemConfig.get("expMaterial").getAsString()
+                ).equals(itemName)
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // 获取经验值(ItemStack)
+    public static int getExp(ItemStack itemStack) { 
+        String itemId = ForgeRegistries.ITEMS.getKey(itemStack.getItem()).toString();
+        Boolean isTrue = false;
+        String itemName = "";
+        for (var tagkey : itemStack.getTags().toList()) {
+            isTrue = itemInExpMaterialsList(itemId) || itemInUpgradeMaterialsList(tagkey.location().toString());
+            if (isTrue) {
+                itemName = itemInExpMaterialsList(itemId) ? itemId : tagkey.location().toString();
+                return getExp(itemName);
+            };
+        }
+        
+        return -1;
+    }
+
+    // 获取经验值(String)
+    public static int getExp(String itemName) { 
+        JsonArray expMaterialsList = getExpMaterialsList();
+        for(int i = 0; i < expMaterialsList.size(); i++) { 
+            JsonObject itemConfig = expMaterialsList.get(i).getAsJsonObject();
+            if (itemInExpMaterialsList(itemName) && itemName.equals(itemConfig.get("expMaterial").getAsString())) {
+                return Math.max(0, itemConfig.get("exp").getAsInt());
+            }
+        }
+        return -1;
+    }
+    //#endregion
+
+    //#region C&C配置相关函数
     private static JsonObject getC2C(){
         return data.get("C&C").getAsJsonObject();
     }
@@ -413,6 +566,7 @@ public class ItemConfig {
             }
         return null;
     }
+    //#endregion
 
     // 格式化文字
     private static String formatItemName(String itemName) {

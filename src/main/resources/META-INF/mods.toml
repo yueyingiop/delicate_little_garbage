@@ -4,7 +4,7 @@ license="All rights reserved"  # 许可证,必填
 
 [[mods]]  # mod信息,必填
 modId="delicate_little_garbage"  # modid,必填
-version="0.0.7-bata"  # mod版本,必填
+version="0.0.9-bata"  # mod版本,必填
 displayName="DLG"  # mod显示名称,必填
 logoFile="logo.png"  # mod图标,选填
 authors="yueyingiop"  # mod作者,选填

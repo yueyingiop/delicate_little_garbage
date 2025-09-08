@@ -1,6 +1,7 @@
 package com.core.DLG.item;
 
 import com.core.DLG.DLG;
+import com.core.DLG.block.RegistryBlock;
 
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.DeferredRegister;
@@ -17,5 +18,14 @@ public class RegistryItem extends Item {
     public static final RegistryObject<Item> EQUIPMENT_DEBRIS = ITEMS.register(
         "equipment_debris", 
         () -> new DebrisItem("equipment_debris", new Item.Properties())
+    );
+
+    public static final RegistryObject<Item> DEBRIS_SMITHING_TABLE_ITEM = ITEMS.register(
+        "debris_smithing_table_item",
+        () -> new CraftingBlockItem(
+            "debris_smithing_table_item",
+            RegistryBlock.DEBRIS_SMITHING_TABLE.get(),
+            new Item.Properties()
+        )
     );
 }
