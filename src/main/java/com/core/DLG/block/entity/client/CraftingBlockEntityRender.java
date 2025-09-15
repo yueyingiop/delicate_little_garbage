@@ -41,7 +41,7 @@ public class CraftingBlockEntityRender implements BlockEntityRenderer<CraftingBl
                 packedLight,
                 OverlayTexture.NO_OVERLAY,
                 ModelData.EMPTY,
-                RenderType.solid()
+                RenderType.translucent()
             );
             poseStack.popPose();
         }

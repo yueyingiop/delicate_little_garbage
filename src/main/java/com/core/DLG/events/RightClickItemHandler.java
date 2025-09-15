@@ -3,6 +3,7 @@ package com.core.DLG.events;
 import com.core.DLG.DLG;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -47,5 +48,28 @@ public class RightClickItemHandler {
             handStack.shrink(1);
             event.setCanceled(true);
         }
+    }
+
+    // 切换Slot
+    @SubscribeEvent
+    public static void switchSlot(PlayerInteractEvent.RightClickItem event) { 
+        Player player = event.getEntity();
+        ItemStack handStack = event.getItemStack();
+        CompoundTag tag = handStack.getTag();
+        if (tag != null && tag.contains("AttributeModifiers") ) {
+            ListTag modifiersList = tag.getList("AttributeModifiers", 10);
+            // 玩家按下shift键
+            if (player.isShiftKeyDown() && tag.contains("boundDebris")) {
+                for (int i = 0; i < modifiersList.size(); i++) {
+                    CompoundTag modifierTag = modifiersList.getCompound(i);
+                    if (modifierTag.getString("Slot").equals("mainhand")) {
+                        modifierTag.putString("Slot", "offhand");
+                    } else if (modifierTag.getString("Slot").equals("offhand")) {
+                        modifierTag.putString("Slot", "mainhand");
+                    }
+                }
+            }
+        }
+    
     }
 }

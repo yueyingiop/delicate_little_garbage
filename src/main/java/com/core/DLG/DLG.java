@@ -2,13 +2,17 @@ package com.core.DLG;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.simple.SimpleChannel;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -21,8 +25,10 @@ import com.core.DLG.attributes.RegistryAttribute;
 import com.core.DLG.block.RegistryBlock;
 import com.core.DLG.block.entity.RegistryBlockEntity;
 import com.core.DLG.configs.ItemConfig;
+import com.core.DLG.entity.RegistryEntity;
 import com.core.DLG.inventory.RegistryMenu;
 import com.core.DLG.item.RegistryItem;
+import com.core.DLG.util.damageText.DamageTextPacket;
 
 @Mod(DLG.MODID)
 public class DLG 
@@ -38,9 +44,18 @@ public class DLG
         .icon(() -> RegistryItem.EQUIPMENT_DEBRIS.get().getDefaultInstance())
         .displayItems((parameters, output) -> {
             output.accept(RegistryItem.EQUIPMENT_DEBRIS.get().getDefaultInstance());
+            output.accept(RegistryItem.DELICATE_LITTLE_GARBAGE.get().getDefaultInstance());
+            output.accept(RegistryItem.LIFT_CRYSTAL.get().getDefaultInstance());
             output.accept(RegistryItem.DEBRIS_SMITHING_TABLE_ITEM.get().getDefaultInstance());
         })
         .build()
+    );
+
+    public static final SimpleChannel NETWORK = NetworkRegistry.newSimpleChannel(
+        ResourceLocation.fromNamespaceAndPath(MODID, "main"),
+        () -> "1.0",
+        s -> true,
+        s -> true
     );
 
 
@@ -51,8 +66,11 @@ public class DLG
         RegistryBlockEntity.BLOCK_ENTITIES.register(modEventBus);
         RegistryBlock.BLOCKS.register(modEventBus);
         RegistryItem.ITEMS.register(modEventBus);
+        RegistryEntity.ENTITIES.register(modEventBus);
         RegistryAttribute(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
+
+        modEventBus.addListener(this::setupNetwork);
         
         
         MinecraftForge.EVENT_BUS.register(this);
@@ -70,12 +88,23 @@ public class DLG
     private void RegistryAttribute(IEventBus modEventBus){
         try {
             ItemConfig.init();
-            if (ItemConfig.getCustomC2C()) {
+            if (ItemConfig.getCustomAttribute()) {
                 RegistryAttribute.ATTRIBUTES.register(modEventBus);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
+    }
+
+    private void setupNetwork(final FMLCommonSetupEvent event) {
+        int id = 0;
+        NETWORK.registerMessage(
+            id++, 
+            DamageTextPacket.class, 
+            DamageTextPacket::encode, 
+            DamageTextPacket::decode, 
+            DamageTextPacket::handle
+        );
     }
 }

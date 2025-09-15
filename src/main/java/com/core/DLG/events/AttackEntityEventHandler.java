@@ -18,14 +18,14 @@ import net.minecraftforge.fml.common.Mod;
 public class AttackEntityEventHandler {
     private static final Random RANDOM = new Random();
 
-    // 双爆逻辑(玩家触发)
+    // 自定义属性逻辑(玩家触发)
     @SubscribeEvent
     public static void onPlayerAttack(AttackEntityEvent event) throws IOException {
         ItemConfig.init();
-        if (!ItemConfig.getCustomC2C()) return; // 检测是否开启自定义双爆
+        if (!ItemConfig.getCustomAttribute()) return; // 检测是否开启自定义双爆
         
-        Player player = event.getEntity();
-        Entity target = event.getTarget();
+        Player player = event.getEntity(); // 攻击方
+        Entity target = event.getTarget(); // 被攻击方
         if (!player.level().isClientSide && target instanceof LivingEntity) {
             double criticalChance = player.getAttributeValue(RegistryAttribute.CRITICAL_CHANCE.get());
             double criticalDamageMultiplier = 1 + player.getAttributeValue(RegistryAttribute.CRITICAL_DAMAGE.get());
@@ -36,6 +36,28 @@ public class AttackEntityEventHandler {
             } else {
                 player.getPersistentData().remove("DLG_CriticalHit");
                 player.getPersistentData().remove("DLG_CriticalMultiplier");
+            }
+
+            double penetrationChance = player.getAttributeValue(RegistryAttribute.PENETRATION_CHANCE.get());
+            double penetrationDamageMultiplier = player.getAttributeValue(RegistryAttribute.PENETRATION_DAMAGE.get());
+            // 触发穿透
+            if (RANDOM.nextDouble() < penetrationChance) {
+                player.getPersistentData().putBoolean("DLG_PenetrationHit", true);
+                player.getPersistentData().putDouble("DLG_PenetrationMultiplier", penetrationDamageMultiplier);
+            } else {
+                player.getPersistentData().remove("DLG_PenetrationHit");
+                player.getPersistentData().remove("DLG_PenetrationMultiplier");
+            }
+
+            double lifestealChance = player.getAttributeValue(RegistryAttribute.LIFESTEAL_CHANCE.get());
+            double lifestealDamageMultiplier = player.getAttributeValue(RegistryAttribute.LIFESTEAL_DAMAGE.get());
+            // 触发吸血
+            if (RANDOM.nextDouble() < lifestealChance) {
+                player.getPersistentData().putBoolean("DLG_LifestealHit", true);
+                player.getPersistentData().putDouble("DLG_LifestealMultiplier", lifestealDamageMultiplier);
+            } else {
+                player.getPersistentData().remove("DLG_LifestealHit");
+                player.getPersistentData().remove("DLG_LifestealMultiplier");
             }
         }
     }

@@ -25,7 +25,7 @@ public class ItemAttributeEventHandler {
     @SubscribeEvent
     public static void onItemAttributeModifier(ItemAttributeModifierEvent event) throws IOException {
         ItemConfig.init();
-        if (!ItemConfig.getCustomC2C()) return; // 检测是否开启自定义双爆
+        if (!ItemConfig.getCustomAttribute()) return; // 检测是否开启自定义双爆
 
         ItemStack itemStack = event.getItemStack();
         String itemId  = ForgeRegistries.ITEMS.getKey(itemStack.getItem()).toString();

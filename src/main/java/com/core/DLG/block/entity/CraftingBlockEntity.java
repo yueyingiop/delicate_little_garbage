@@ -8,12 +8,16 @@ import javax.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 import com.core.DLG.configs.ItemConfig;
+import com.core.DLG.enums.QualityEnum;
+import com.core.DLG.enums.TypeEnum;
 import com.core.DLG.inventory.CraftingBlockMenu;
 import com.core.DLG.item.RegistryItem;
+import com.core.DLG.util.EntryHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -28,6 +32,7 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
 
@@ -133,6 +138,10 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
         if (hasDebris(input1) && input2.isEmpty() && !input3.isEmpty()) {
             return upgradeItemLevel(input1, input3);
         }
+        // 情况4: 换 slot
+        if (hasDebris(input1) && !input2.isEmpty() && input3.isEmpty()) {
+            return switchSlot(input1, input2);
+        }
         return ItemStack.EMPTY;
     }
 
@@ -152,6 +161,8 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
             int consumeCount = countConsumption(input1,input3);
             input1.shrink(1);
             input3.shrink(consumeCount);
+        } else if (hasDebris(input1) && !input2.isEmpty() && input3.isEmpty()) {
+            input1.shrink(1);
         }
         setChanged();
         updateOutput();
@@ -195,7 +206,18 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
         tag.put("boundDebris", newTag);
 
         if (debrisQuality > 6) tag.putBoolean("Unbreakable", true); // 传说及以上品质装备无损坏
+        
+        try {
+            EntryHelper.initEntry(
+                tag, 
+                TypeEnum.getType(debrisTag.getString("type")), 
+                QualityEnum.getQuality(debrisTag.getInt("quality"))
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
+        EntryHelper.transitDefaultAttribute(result, tag);
         result.setCount(1);
         return result;
     }
@@ -216,7 +238,7 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
         return result;
     }
 
-    // 提升装备等级
+    // 提升装备等级 √
     private ItemStack upgradeItemLevel(ItemStack item, ItemStack material) {
         if (!hasDebris(item)) return ItemStack.EMPTY; // 未绑定碎片不可升级
         ItemStack result = item.copy();
@@ -239,17 +261,68 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
             newLevel++;
             maxExp = (newLevel+1)*100;
         }
-        // newLevel = newExp >= maxExp ? currentLevel + 1 : currentLevel; // 新等级初始化
-        // newExp = newExp >= maxExp ? newExp - maxExp : newExp; // 计算新经验值
+
         newLevel = Math.min(newLevel, maxLevel); // 不超过最大等级
         debrisTag.putInt("level", newLevel);
         debrisTag.putInt("exp", newExp);
         debrisTag.putInt("maxExp", maxExp);
 
+        EntryHelper.upgradeEntry(tag);
+
         return result;
     }
 
-    // 获取计算消耗
+    // 替换槽位 √
+    private ItemStack switchSlot(ItemStack item, ItemStack switchMaterial) {
+        ItemStack result = item.copy();
+        CompoundTag tag = result.getTag();
+
+        String slot = "mainhand";
+        String newType = null;
+        switch (ForgeRegistries.ITEMS.getKey(switchMaterial.getItem()).toString()) {
+            case "minecraft:stick":
+                slot = "mainhand";
+                break;
+            case "minecraft:spider_eye":
+                slot = "head";
+                newType = "helmet";
+                break;
+            case "minecraft:rotten_flesh":
+                slot = "chest";
+                newType = "chestplate";
+                break;
+            case "minecraft:bone":
+                slot = "legs";
+                newType = "leggings";
+                break;
+            case "minecraft:string":
+                slot = "feet";
+                newType = "boots";
+                break;
+            default:
+                slot = "mainhand";
+                break;
+        }
+
+        if (tag != null && tag.contains("AttributeModifiers")) {
+            ListTag modifiersList = tag.getList("AttributeModifiers", 10);
+            if (tag.contains("boundDebris")) {
+                for (int i = 0; i < modifiersList.size(); i++) {
+                    CompoundTag modifierTag = modifiersList.getCompound(i);
+                    modifierTag.putString("Slot", slot);
+                }
+            }
+            CompoundTag debrisTag = tag.getCompound("boundDebris");
+            String type = debrisTag.getString("type");
+            type = newType == null ? type : newType;
+            debrisTag.putString("type", type);
+            return result;
+        }
+        
+        return ItemStack.EMPTY;
+    }
+
+    // 计算升级材料消耗
     private int countConsumption(ItemStack item, ItemStack material) {
         ItemStack result = item.copy();
         CompoundTag tag = result.getOrCreateTag();

@@ -14,6 +14,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.entity.player.Player;
 import squeek.appleskin.client.HUDOverlayHandler;
 import squeek.appleskin.helpers.TextureHelper;
@@ -59,7 +60,8 @@ public abstract class HUDOverlayHandlerMixin {
 
             if (row == 0 && player.getFoodData().getSaturationLevel() <= 0.0F && 
                 mc.gui.getGuiTicks() % (player.getFoodData().getFoodLevel() * 3 + 1) == 0) {
-                y += mc.level.random.nextInt(3) - 1;
+                ClientLevel level = mc.level;
+                if (level != null) y += level.random.nextInt(3) - 1;
             }
 
             point.x = x - right;
@@ -112,7 +114,8 @@ public abstract class HUDOverlayHandlerMixin {
                 shouldAnimatedFood = saturationLevel <= 0.0F && ticks % (foodLevel * 3 + 1) == 0;
                 
                 if (shouldAnimatedFood) {
-                    y += mc.level.random.nextInt(3) - 1;
+                    ClientLevel level = mc.level;
+                    if (level != null) y += level.random.nextInt(3) - 1;
                 }
             }
             

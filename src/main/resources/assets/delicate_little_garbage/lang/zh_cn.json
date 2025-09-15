@@ -36,6 +36,13 @@
     "tooltip.dlg.debris.quality.undefined_quality": "未定义",
 
     "attribute.dlg.critical_chance": "暴击率",
-    "attribute.dlg.critical_damage": "暴击伤害"
+    "attribute.dlg.critical_damage": "暴击伤害",
+    "attribute.dlg.penetration_chance": "穿透率",
+    "attribute.dlg.penetration_damage": "穿透伤害",
+    "attribute.dlg.lifesteal_chance": "吸血率",
+    "attribute.dlg.lifesteal_damage": "吸血伤害",
+    "attribute.dlg.dodge": "闪避率",
+    "attribute.dlg.hp_regen": "生命恢复",
+    "attribute.dlg.healing_bonus": "治疗加成"
 
 }

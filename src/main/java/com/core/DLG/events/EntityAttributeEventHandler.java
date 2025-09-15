@@ -20,9 +20,16 @@ public class EntityAttributeEventHandler {
     @SubscribeEvent
     public static void onEntityAttributeModification(EntityAttributeModificationEvent  event)  throws IOException  {
         ItemConfig.init();
-        if (ItemConfig.getCustomC2C()) {
+        if (ItemConfig.getCustomAttribute()) {
             detectAndAdd(event, EntityType.PLAYER, RegistryAttribute.CRITICAL_CHANCE.get());
             detectAndAdd(event, EntityType.PLAYER, RegistryAttribute.CRITICAL_DAMAGE.get());
+            detectAndAdd(event, EntityType.PLAYER, RegistryAttribute.DODGE.get());
+            detectAndAdd(event, EntityType.PLAYER, RegistryAttribute.PENETRATION_CHANCE.get());
+            detectAndAdd(event, EntityType.PLAYER, RegistryAttribute.PENETRATION_DAMAGE.get());
+            detectAndAdd(event, EntityType.PLAYER, RegistryAttribute.LIFESTEAL_CHANCE.get());
+            detectAndAdd(event, EntityType.PLAYER, RegistryAttribute.LIFESTEAL_DAMAGE.get());
+            detectAndAdd(event, EntityType.PLAYER, RegistryAttribute.HP_REGEN.get());
+            detectAndAdd(event, EntityType.PLAYER, RegistryAttribute.HEALING_BONUS.get());
         }
     }
     public static void detectAndAdd(EntityAttributeModificationEvent event, EntityType<? extends LivingEntity> entityType, Attribute attribute){

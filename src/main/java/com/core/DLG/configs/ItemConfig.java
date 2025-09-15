@@ -57,11 +57,21 @@ public class ItemConfig {
                 JsonObject C2C = new JsonObject();
                 JsonArray C2CItemList = new JsonArray();
                 json.add("C&C", C2C);
-                C2C.addProperty("customC&C", true);
+                C2C.addProperty("customAttribute", true);
                 C2C.addProperty("playerDefaultCriticalChance", 0.05D);
                 C2C.addProperty("playerDefaultCriticalDamage", 0.5D);
                 C2C.add("C&CItemList", C2CItemList);
                 C2CItemListInit(C2CItemList);
+
+                JsonObject customAttribute = new JsonObject();
+                JsonObject attributeType = new JsonObject();
+                JsonArray entrySetting = new JsonArray();
+                json.add("customAttribute", customAttribute);
+                customAttribute.add("attributeType", attributeType);
+                customAttribute.add("entrySetting", entrySetting);
+                attributeTypeInit(attributeType);
+                entrySettingInit(entrySetting);
+
                 Files.write(file.toPath(),json.toString().getBytes());
             } else {
                 detectConfig();
@@ -115,11 +125,22 @@ public class ItemConfig {
             JsonObject C2C = new JsonObject();
             JsonArray C2CItemList = new JsonArray();
             currentData.add("C&C", C2C);
-            C2C.addProperty("customC&C", true);
+            C2C.addProperty("customAttribute", true);
             C2C.addProperty("playerDefaultCriticalChance", 0.05D);
             C2C.addProperty("playerDefaultCriticalDamage", 0.5D);
             C2C.add("C&CItemList", C2CItemList);
             C2CItemListInit(C2CItemList);
+            isTrue++;
+        }
+        if (currentData.get("customAttribute") == null) {
+            JsonObject customAttribute = new JsonObject();
+            JsonObject attributeType = new JsonObject();
+            JsonArray entrySetting = new JsonArray();
+            currentData.add("customAttribute", customAttribute);
+            customAttribute.add("attributeType", attributeType);
+            customAttribute.add("entrySetting", entrySetting);
+            attributeTypeInit(attributeType);
+            entrySettingInit(entrySetting);
             isTrue++;
         }
         if (isTrue > 0) Files.write(file.toPath(),currentData.toString().getBytes());
@@ -338,6 +359,304 @@ public class ItemConfig {
             configList.add(itemConfig);
         }
     }
+    
+    public static void attributeTypeInit(JsonObject attributeType) {
+        JsonArray customType = new JsonArray();
+        JsonArray attackType = new JsonArray();
+        JsonArray defenseType = new JsonArray();
+        attributeType.add("customType", customType);
+        attributeType.add("attackType", attackType);
+        attributeType.add("defenseType", defenseType);
+        customTypeInit(customType);
+        attackTypeInit(attackType);
+        defenseTypeInit(defenseType);
+    }
+
+    public static void customTypeInit(JsonArray customType) {
+        String[] attributeList = {
+            "delicate_little_garbage:critical_chance", //暴击率
+            "delicate_little_garbage:critical_damage", //暴击伤害
+            "minecraft:generic.flying_speed", //飞行速度
+            "minecraft:generic.follow_range", //生物跟随范围
+            "minecraft:generic.max_health", //最大生命值
+            "minecraft:generic.max_health", //最大生命值
+            "forge:block_reach", // 方块距离
+            "forge:entity_reach" // 实体距离
+        };
+        float[] baseValueList = {
+            0.06f,
+            0.13f,
+            1.0f,
+            5.0f,
+            10.0f,
+            0.15f,
+            0.3f,
+            0.3f
+        };
+        float[] baseRangeList = {
+            0.015f,
+            0.03f,
+            0.3f,
+            1.0f,
+            3.0f,
+            0.03f,
+            0.1f,
+            0.1f
+        };
+        float[] updateValueList = {
+            0.05f,
+            0.11f,
+            0.5f,
+            3.0f,
+            3.0f,
+            0.1f,
+            0.15f,
+            0.15f
+        };
+        float[] updateRangeList = {
+            0.003f,
+            0.006f,
+            0.1f,
+            0.5f,
+            1.0f,
+            0.05f,
+            0.05f,
+            0.05f
+        };
+        int[] operationList = {
+            0,
+            0,
+            2,
+            0,
+            0,
+            2,
+            0,
+            0
+        };
+        for (int i = 0; i < attributeList.length; i++) { 
+            JsonObject attributeConfig = new JsonObject();
+            attributeConfig.addProperty("attribute", attributeList[i]);
+            attributeConfig.addProperty("baseValue", baseValueList[i]);
+            attributeConfig.addProperty("baseRange", baseRangeList[i]);
+            attributeConfig.addProperty("updateValue", updateValueList[i]);
+            attributeConfig.addProperty("updateRange", updateRangeList[i]);
+            attributeConfig.addProperty("operation", operationList[i]);
+            customType.add(attributeConfig);
+        }
+    }
+
+    public static void attackTypeInit(JsonArray customType) {
+        String[] attributeList = {
+            "delicate_little_garbage:critical_chance", //暴击率
+            "delicate_little_garbage:critical_damage", //暴击伤害
+            "delicate_little_garbage:lifesteal_chance", //吸血率
+            "delicate_little_garbage:lifesteal_damage", //吸血伤害
+            "delicate_little_garbage:penetration_chance", //穿透率
+            "delicate_little_garbage:penetration_damage", //穿透伤害
+            "minecraft:generic.attack_damage", //攻击伤害
+            "minecraft:generic.attack_damage", //攻击伤害%
+            "minecraft:generic.attack_knockback", //攻击击退
+            "minecraft:generic.attack_speed", //攻击速度
+            "minecraft:generic.max_health", //最大生命值
+            "minecraft:generic.max_health", //最大生命值%
+        };
+        float[] baseValueList = {
+            0.08f,
+            0.17f,
+            0.1f,
+            0.2f,
+            0.1f,
+            0.15f,
+            5.0f,
+            0.2f,
+            0.3f,
+            0.3f,
+            3.0f,
+            0.15f
+        };
+        float[] baseRangeList = {
+            0.015f,
+            0.03f,
+            0.02f,
+            0.07f,
+            0.02f,
+            0.04f,
+            1.0f,
+            0.02f,
+            0.05f,
+            0.05f,
+            0.5f,
+            0.03f
+        };
+        float[] updateValueList = {
+            0.07f,
+            0.12f,
+            0.08f,
+            0.15f,
+            0.08f,
+            0.1f,
+            4.0f,
+            0.12f,
+            0.25f,
+            0.25f,
+            2.5f,
+            0.1f
+        };
+        float[] updateRangeList = {
+            0.005f,
+            0.004f,
+            0.01f,
+            0.03f,
+            0.02f,
+            0.03f,
+            0.5f,
+            0.045f,
+            0.03f,
+            0.03f,
+            0.5f,
+            0.02f
+        };
+        int[] operationList = {
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            2,
+            2,
+            2,
+            0,
+            2
+        };
+        for (int i = 0; i < attributeList.length; i++) { 
+            JsonObject attributeConfig = new JsonObject();
+            attributeConfig.addProperty("attribute", attributeList[i]);
+            attributeConfig.addProperty("baseValue", baseValueList[i]);
+            attributeConfig.addProperty("baseRange", baseRangeList[i]);
+            attributeConfig.addProperty("updateValue", updateValueList[i]);
+            attributeConfig.addProperty("updateRange", updateRangeList[i]);
+            attributeConfig.addProperty("operation", operationList[i]);
+            customType.add(attributeConfig);
+        }
+    }
+
+    public static void defenseTypeInit(JsonArray customType) {
+        String[] attributeList = {
+            "delicate_little_garbage:critical_chance", //暴击率
+            "delicate_little_garbage:critical_damage", //暴击伤害
+            "delicate_little_garbage:dodge", //闪避
+            "delicate_little_garbage:healing_bonus", //治疗加成
+            "minecraft:generic.armor", //护甲
+            "minecraft:generic.armor_toughness", //护甲韧性
+            "minecraft:generic.knockback_resistance", //击退抗性
+            "minecraft:generic.luck", //幸运值
+            "minecraft:generic.movement_speed", //移动速度
+            "forge:swim_speed", //游泳速度
+            "minecraft:generic.max_health", //最大生命值
+            "minecraft:generic.max_health", //最大生命值
+        };
+        float[] baseValueList = {
+            0.06f,
+            0.13f,
+            0.15f,
+            3.0f,
+            5.0f,
+            2.0f,
+            0.1f,
+            1.0f,
+            0.25f,
+            0.25f,
+            10.0f,
+            0.15f
+        };
+        float[] baseRangeList = {
+            0.015f,
+            0.03f,
+            0.05f,
+            1.0f,
+            1.0f,
+            0.5f,
+            0.03f,
+            0.4f,
+            0.1f,
+            0.1f,
+            3.0f,
+            0.03f
+        };
+        float[] updateValueList = {
+            0.05f,
+            0.11f,
+            0.12f,
+            1.0f,
+            1.0f,
+            0.5f,
+            0.05f,
+            0.5f,
+            0.1f,
+            0.1f,
+            3.0f,
+            0.1f
+        };
+        float[] updateRangeList = {
+            0.003f,
+            0.006f,
+            0.02f,
+            0.3f,
+            0.5f,
+            0.15f,
+            0.01f,
+            0.3f,
+            0.03f,
+            0.03f,
+            1.0f,
+            0.05f
+        };
+        int[] operationList = {
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            2,
+            2,
+            0,
+            2
+        };
+        for (int i = 0; i < attributeList.length; i++) { 
+            JsonObject attributeConfig = new JsonObject();
+            attributeConfig.addProperty("attribute", attributeList[i]);
+            attributeConfig.addProperty("baseValue", baseValueList[i]);
+            attributeConfig.addProperty("baseRange", baseRangeList[i]);
+            attributeConfig.addProperty("updateValue", updateValueList[i]);
+            attributeConfig.addProperty("updateRange", updateRangeList[i]);
+            attributeConfig.addProperty("operation", operationList[i]);
+            customType.add(attributeConfig);
+        }
+    }
+
+    public static void entrySettingInit(JsonArray entrySetting) {
+        int[] qualityList = {
+            1,2,3,4,5,6,7,8,9,0
+        };
+        int[] basicEntriesCount = {
+            1,2,3,3,4,4,5,5,6,4
+        };
+        int[] maxEntriesCount = {
+            1,2,3,4,5,5,6,6,7,5
+        };
+        for (int i = 0; i < qualityList.length; i++) { 
+            JsonObject entrySettingConfig = new JsonObject();
+            entrySettingConfig.addProperty("quality", qualityList[i]);
+            entrySettingConfig.addProperty("basicEntriesCount", basicEntriesCount[i]);
+            entrySettingConfig.addProperty("maxEntriesCount", maxEntriesCount[i]);
+            entrySetting.add(entrySettingConfig);
+        }
+    }
     //#endregion
     
     public static int getMaxStackSize(){
@@ -514,13 +833,15 @@ public class ItemConfig {
     }
     //#endregion
 
+
+
     //#region C&C配置相关函数
     private static JsonObject getC2C(){
         return data.get("C&C").getAsJsonObject();
     }
 
-    public static boolean getCustomC2C() {
-        return getC2C().get("customC&C").getAsBoolean();
+    public static boolean getCustomAttribute() {
+        return getC2C().get("customAttribute").getAsBoolean();
     }
 
     public static Double getPlayerDefaultCriticalChance() {
@@ -564,6 +885,44 @@ public class ItemConfig {
                     return itemConfig;
                 }
             }
+        return null;
+    }
+    //#endregion
+
+
+    //#region 词条相关函数
+    private static JsonObject getCustomAttributeO(){
+        return data.get("customAttribute").getAsJsonObject();
+    }
+
+    private static JsonObject getAttributeType() {
+        return getCustomAttributeO().get("attributeType").getAsJsonObject();
+    }
+
+    public static JsonArray getCustomType() {
+        return getAttributeType().get("customType").getAsJsonArray();
+    }
+
+    public static JsonArray getAttackType() {
+        return getAttributeType().get("attackType").getAsJsonArray();
+    }
+
+    public static JsonArray getDefenseType() {
+        return getAttributeType().get("defenseType").getAsJsonArray();
+    }
+
+    private static JsonArray getEntrySetting() {
+        return getCustomAttributeO().get("entrySetting").getAsJsonArray();
+    }
+
+    public static JsonObject getConfigInEntrySetting(int quality) {
+        JsonArray entrySetting = getEntrySetting();
+        for(int i = 0; i < entrySetting.size(); i++) { 
+            JsonObject itemConfig = entrySetting.get(i).getAsJsonObject();
+            if (itemConfig.get("quality").getAsInt() == quality) {
+                return itemConfig;
+            }
+        }
         return null;
     }
     //#endregion

@@ -20,6 +20,20 @@ public class RegistryItem extends Item {
         () -> new DebrisItem("equipment_debris", new Item.Properties())
     );
 
+    public static final RegistryObject<Item> DELICATE_LITTLE_GARBAGE = ITEMS.register(
+        "delicate_little_garbage", 
+        () -> new RegistryItem(
+            new Item.Properties()
+        )
+    );
+
+    public static final RegistryObject<Item> LIFT_CRYSTAL = ITEMS.register(
+        "life_crystal", 
+        () -> new RegistryItem(
+            new Item.Properties()
+        )
+    );
+
     public static final RegistryObject<Item> DEBRIS_SMITHING_TABLE_ITEM = ITEMS.register(
         "debris_smithing_table_item",
         () -> new CraftingBlockItem(
