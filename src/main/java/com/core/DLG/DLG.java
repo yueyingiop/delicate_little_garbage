@@ -25,9 +25,12 @@ import com.core.DLG.attributes.RegistryAttribute;
 import com.core.DLG.block.RegistryBlock;
 import com.core.DLG.block.entity.RegistryBlockEntity;
 import com.core.DLG.configs.ItemConfig;
+import com.core.DLG.effect.RegistryEffect;
+import com.core.DLG.effect.RegistryPotion;
 import com.core.DLG.entity.RegistryEntity;
 import com.core.DLG.inventory.RegistryMenu;
 import com.core.DLG.item.RegistryItem;
+import com.core.DLG.util.damageHUD.DamageHUDPacket;
 import com.core.DLG.util.damageText.DamageTextPacket;
 
 @Mod(DLG.MODID)
@@ -44,9 +47,12 @@ public class DLG
         .icon(() -> RegistryItem.EQUIPMENT_DEBRIS.get().getDefaultInstance())
         .displayItems((parameters, output) -> {
             output.accept(RegistryItem.EQUIPMENT_DEBRIS.get().getDefaultInstance());
-            output.accept(RegistryItem.DELICATE_LITTLE_GARBAGE.get().getDefaultInstance());
-            output.accept(RegistryItem.LIFT_CRYSTAL.get().getDefaultInstance());
-            output.accept(RegistryItem.DEBRIS_SMITHING_TABLE_ITEM.get().getDefaultInstance());
+            output.accept(RegistryItem.DELICATE_LITTLE_GARBAGE.get());
+            output.accept(RegistryItem.LIFT_CRYSTAL.get());
+            output.accept(RegistryItem.INDESTRUCTIBLE_SCROLL.get());
+            output.accept(RegistryItem.NEPETA_CATARIA_ITEM.get());
+            output.accept(RegistryItem.NEPETA_CATARIA_SEEDS.get());
+            output.accept(RegistryItem.DEBRIS_SMITHING_TABLE_ITEM.get());
         })
         .build()
     );
@@ -62,17 +68,18 @@ public class DLG
     public DLG(FMLJavaModLoadingContext context)
     {
         IEventBus modEventBus = context.getModEventBus();
-        RegistryMenu.MENUS.register(modEventBus);
-        RegistryBlockEntity.BLOCK_ENTITIES.register(modEventBus);
-        RegistryBlock.BLOCKS.register(modEventBus);
-        RegistryItem.ITEMS.register(modEventBus);
-        RegistryEntity.ENTITIES.register(modEventBus);
+
+        RegistryItem.ITEMS.register(modEventBus); // 注册物品
+        RegistryMenu.MENUS.register(modEventBus); // 注册菜单
+        RegistryBlockEntity.BLOCK_ENTITIES.register(modEventBus); // 注册方块实体
+        RegistryBlock.BLOCKS.register(modEventBus); // 注册方块
+        RegistryEntity.ENTITIES.register(modEventBus); // 注册实体
+        RegistryEffect.EFFECTS.register(modEventBus); // 注册效果
+        RegistryPotion.POTIONS.register(modEventBus); // 注册药水
         RegistryAttribute(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
 
         modEventBus.addListener(this::setupNetwork);
-        
-        
         MinecraftForge.EVENT_BUS.register(this);
         try {
             ItemConfig.init();
@@ -105,6 +112,13 @@ public class DLG
             DamageTextPacket::encode, 
             DamageTextPacket::decode, 
             DamageTextPacket::handle
+        );
+        NETWORK.registerMessage(
+            id++, 
+            DamageHUDPacket.class, 
+            DamageHUDPacket::encode, 
+            DamageHUDPacket::decode, 
+            DamageHUDPacket::handle
         );
     }
 }

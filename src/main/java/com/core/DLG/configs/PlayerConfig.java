@@ -31,11 +31,17 @@ public class PlayerConfig {
                 json.addProperty("alwaysSleep",true); // 是否总是睡觉
                 json.addProperty("sleepDurationTime",12000); // 睡觉时间
                 json.addProperty("sleepEverywhere",true); // 可以在任何地方睡觉
+                
 
                 JsonObject foodData = new JsonObject();
                 json.add("foodData", foodData);
                 foodData.addProperty("maxHungry",40);
                 foodData.addProperty("minHealFoodLevel",20);
+
+                JsonObject damageHUD = new JsonObject();
+                json.add("damageHUD", damageHUD);
+                damageHUD.addProperty("show", false);
+
                 Files.write(file.toPath(),json.toString().getBytes());
             } else {
                 detectConfig();
@@ -86,6 +92,12 @@ public class PlayerConfig {
             foodData.addProperty("minHealFoodLevel",20);
             isTrue++;
         }
+        if (currentData.get("damageHUD")==null) {
+            JsonObject damageHUD = new JsonObject();
+            currentData.add("damageHUD", damageHUD);
+            damageHUD.addProperty("show", false);
+            isTrue++;
+        }
         if (isTrue > 0) Files.write(file.toPath(),currentData.toString().getBytes());
         data = currentData;
     }
@@ -124,5 +136,13 @@ public class PlayerConfig {
 
     public static int getMinHealFoodLevel() {
         return Math.max(0, Math.min(getFoodData().get("minHealFoodLevel").getAsInt(), getMaxHungry()));
+    }
+
+    private static JsonObject getDamageHUD(){
+        return data.get("damageHUD").getAsJsonObject();
+    }
+
+    public static boolean getDamageHUDShow() {
+        return getDamageHUD().get("show").getAsBoolean();
     }
 }

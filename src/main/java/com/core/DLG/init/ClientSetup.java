@@ -64,11 +64,18 @@ public class ClientSetup {
                 RenderType.translucent()
             );
 
+            ItemBlockRenderTypes.setRenderLayer(
+                RegistryBlock.NEPETA_CATARIA.get(), 
+                RenderType.cutout()
+            );
+
             // 设置gui渲染
             MenuScreens.register(
                 RegistryMenu.CRAFTING_BLOCK_MENU.get(), 
                 CraftingBlockScreen::new
             );
+
+
         });
     }
 

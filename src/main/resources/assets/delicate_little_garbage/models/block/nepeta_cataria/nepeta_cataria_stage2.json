@@ -1,0 +1,6 @@
+{
+    "parent": "minecraft:block/cross",
+    "textures": {
+        "cross" :"delicate_little_garbage:block/plants/nepeta_cataria_stage2"
+    }
+}

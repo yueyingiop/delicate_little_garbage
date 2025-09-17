@@ -35,7 +35,7 @@ public class CraftingBlockMenu extends AbstractContainerMenu {
         if (blockEntity != null) {
             // 添加方块物品栏槽位
             blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(h -> {
-                addSlot(new SlotItemHandler(h, 0, 44, 35) {
+                addSlot(new SlotItemHandler(h, 0, 30, 35) {
                     @Override
                     public int getMaxStackSize(ItemStack stack) {
                         return 1;
@@ -45,7 +45,7 @@ public class CraftingBlockMenu extends AbstractContainerMenu {
                         return 1;
                     }
                 }); // 输入槽1
-                addSlot(new SlotItemHandler(h, 1, 80, 35) {
+                addSlot(new SlotItemHandler(h, 1, 48, 35) {
                     @Override
                     public int getMaxStackSize(ItemStack stack) {
                         return 1;
@@ -55,8 +55,8 @@ public class CraftingBlockMenu extends AbstractContainerMenu {
                         return 1;
                     }
                 }); // 输入槽2
-                addSlot(new SlotItemHandler(h, 2, 116, 35)); // 输入槽3
-                addSlot(new SlotItemHandler(h, 3, 80, 79) {
+                addSlot(new SlotItemHandler(h, 2, 66, 35)); // 输入槽3
+                addSlot(new SlotItemHandler(h, 3, 124, 35) {
                     // 输出槽不允许放入物品
                     @Override
                     public boolean mayPlace(ItemStack stack) {

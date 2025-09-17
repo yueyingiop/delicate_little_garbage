@@ -2,6 +2,7 @@ package com.core.DLG.util.damageText;
 
 import java.util.Random;
 
+import com.core.DLG.DLG;
 import com.core.DLG.enums.DamageTypeEnum;
 import com.mojang.blaze3d.vertex.PoseStack;
 

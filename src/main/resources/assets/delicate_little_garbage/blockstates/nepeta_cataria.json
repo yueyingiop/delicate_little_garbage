@@ -1,0 +1,12 @@
+{
+    "variants": {
+        "age=0": {"model": "delicate_little_garbage:block/nepeta_cataria/nepeta_cataria_stage0"},
+        "age=1": {"model": "delicate_little_garbage:block/nepeta_cataria/nepeta_cataria_stage0"},
+        "age=2": {"model": "delicate_little_garbage:block/nepeta_cataria/nepeta_cataria_stage0"},
+        "age=3": {"model": "delicate_little_garbage:block/nepeta_cataria/nepeta_cataria_stage1"},
+        "age=4": {"model": "delicate_little_garbage:block/nepeta_cataria/nepeta_cataria_stage1"},
+        "age=5": {"model": "delicate_little_garbage:block/nepeta_cataria/nepeta_cataria_stage2"},
+        "age=6": {"model": "delicate_little_garbage:block/nepeta_cataria/nepeta_cataria_stage2"},
+        "age=7": {"model": "delicate_little_garbage:block/nepeta_cataria/nepeta_cataria_stage3"}
+    }
+}

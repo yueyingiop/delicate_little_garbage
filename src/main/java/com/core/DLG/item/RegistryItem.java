@@ -4,6 +4,7 @@ import com.core.DLG.DLG;
 import com.core.DLG.block.RegistryBlock;
 
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -30,6 +31,28 @@ public class RegistryItem extends Item {
     public static final RegistryObject<Item> LIFT_CRYSTAL = ITEMS.register(
         "life_crystal", 
         () -> new RegistryItem(
+            new Item.Properties()
+        )
+    );
+
+    public static final RegistryObject<Item> INDESTRUCTIBLE_SCROLL = ITEMS.register(
+        "indestructible_scroll",
+        () -> new RegistryItem(
+            new Item.Properties()
+        )
+    );
+
+    public static final RegistryObject<Item> NEPETA_CATARIA_ITEM = ITEMS.register(
+        "nepeta_cataria_item",
+        () -> new RegistryItem(
+            new Item.Properties()
+        )
+    );
+
+    public static final RegistryObject<Item> NEPETA_CATARIA_SEEDS = ITEMS.register(
+        "nepeta_cataria_seeds",
+        () -> new ItemNameBlockItem(
+            RegistryBlock.NEPETA_CATARIA.get(),
             new Item.Properties()
         )
     );

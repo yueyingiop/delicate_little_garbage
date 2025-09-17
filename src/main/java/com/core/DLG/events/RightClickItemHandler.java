@@ -2,8 +2,10 @@ package com.core.DLG.events;
 
 import com.core.DLG.DLG;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -62,11 +64,15 @@ public class RightClickItemHandler {
             if (player.isShiftKeyDown() && tag.contains("boundDebris")) {
                 for (int i = 0; i < modifiersList.size(); i++) {
                     CompoundTag modifierTag = modifiersList.getCompound(i);
+                    String slot = "主手";
                     if (modifierTag.getString("Slot").equals("mainhand")) {
                         modifierTag.putString("Slot", "offhand");
+                        slot = "副手";
                     } else if (modifierTag.getString("Slot").equals("offhand")) {
                         modifierTag.putString("Slot", "mainhand");
+                        slot = "主手";
                     }
+                    player.displayClientMessage(Component.translatable("已将属性切换到在 "+slot+" 时生效").withStyle(ChatFormatting.GOLD), true);
                 }
             }
         }

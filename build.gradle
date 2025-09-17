@@ -53,6 +53,8 @@ minecraft {
 
         client {
             property 'forge.enabledGameTestNamespaces', mod_id
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
         }
 
         server {
@@ -100,6 +102,21 @@ repositories {
     maven {
         url "https://cursemaven.com/"
     }
+
+    // 添加库:玉
+    maven { 
+        url = "https://api.modrinth.com/maven" 
+    }
+
+    // 添加库:JEI
+    maven {
+        name = "Jared's maven"
+        url = "https://maven.blamejared.com/"
+    }
+    maven {
+        name = "ModMaven"
+        url = "https://modmaven.dev"
+    }
 }
 
 dependencies {
@@ -110,9 +127,17 @@ dependencies {
     implementation fg.deobf("dev.architectury:architectury-forge:${architectury_version}") // Architectury
     implementation fg.deobf("curse.maven:probejs-585406:5227399") // ProbeJS
 
-    // compileOnly fg.deobf("squeek.appleskin:appleskin-forge:${appleskin_version}:api") // 苹果皮API
     implementation fg.deobf("squeek.appleskin:appleskin-forge:${appleskin_version}") // 苹果皮
-    implementation fg.deobf("curse.maven:IBE-256822:4994072")
+    implementation fg.deobf("curse.maven:IBE-256822:4994072") // IBE
+
+    implementation fg.deobf("maven.modrinth:jade:${jade_version}") // Jade
+
+    // 使用 JEI
+    compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"))
+    compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"))
+    runtimeOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}"))
+
+
 
     // 使用 Mixin
     implementation 'org.spongepowered:mixin:0.8.5'

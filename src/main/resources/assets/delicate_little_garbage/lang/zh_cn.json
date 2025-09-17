@@ -1,5 +1,19 @@
 {
     "item.delicate_little_garbage.equipment_debris": "装备碎片",
+    "item.delicate_little_garbage.life_crystal": "生命水晶",
+    "item.delicate_little_garbage.delicate_little_garbage": "精致小垃圾",
+    "item.delicate_little_garbage.nepeta_cataria_item": "猫薄荷",
+    "item.delicate_little_garbage.nepeta_cataria_seeds": "猫薄荷种子",
+    "item.minecraft.potion.effect.cat_potion": "绝世毫猫药水",
+    "item.minecraft.splash_potion.effect.cat_potion": "喷溅型绝世毫猫药水",
+    "item.minecraft.lingering_potion.effect.cat_potion": "滞留型绝世毫猫药水",
+
+    "block.delicate_little_garbage.nepeta_cataria": "猫薄荷",
+    "block.delicate_little_garbage.debris_smithing_table": "碎片锻造台",
+    
+    "effect.delicate_little_garbage.cat_effect": "唤猫之印",
+    
+    "container.dlg.debris_smithing_table": "碎片锻造台",
 
     "tooltip.dlg.stackcount": "堆叠数: %s",
     "tooltip.dlg.upgrade": "按住[SHIFT]查看绑定信息",

@@ -347,10 +347,12 @@ public class ItemConfig {
     // 经验材料初始化
     public static void expMaterialsInit(JsonArray configList){
         String[] MaterialList = {
-            "minecraft:stone"
+            "delicate_little_garbage:life_crystal",
+            "delicate_little_garbage:delicate_little_garbage"
         };
         int[] expList = {
-            100
+            100,
+            2000
         };
         for (int i = 0; i < MaterialList.length; i++) { 
             JsonObject itemConfig = new JsonObject();
@@ -809,8 +811,9 @@ public class ItemConfig {
         String itemId = ForgeRegistries.ITEMS.getKey(itemStack.getItem()).toString();
         Boolean isTrue = false;
         String itemName = "";
+        if (itemStack.getTags().toList().size() == 0) return getExp(itemId);
         for (var tagkey : itemStack.getTags().toList()) {
-            isTrue = itemInExpMaterialsList(itemId) || itemInUpgradeMaterialsList(tagkey.location().toString());
+            isTrue = itemInExpMaterialsList(itemId) || itemInExpMaterialsList(tagkey.location().toString());
             if (isTrue) {
                 itemName = itemInExpMaterialsList(itemId) ? itemId : tagkey.location().toString();
                 return getExp(itemName);
@@ -829,6 +832,7 @@ public class ItemConfig {
                 return Math.max(0, itemConfig.get("exp").getAsInt());
             }
         }
+        
         return -1;
     }
     //#endregion

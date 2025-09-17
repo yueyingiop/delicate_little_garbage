@@ -35,6 +35,9 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
+    private ItemStack renderStack = ItemStack.EMPTY; // 要渲染的物品
+    private float rotation = 0.0f; // 物品旋转角度
+    private float hoverHeight = 0.0f; // 物品悬浮高度
 
     // 添加输入输出物品栏
     private final ItemStackHandler itemHandler = new ItemStackHandler(4) {
@@ -45,9 +48,8 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
                 updateOutput();
             }
         };
-        
-
     };
+
     // 创建物品栏
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
 
@@ -122,6 +124,12 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
         ItemStack input3 = itemHandler.getStackInSlot(2);
         ItemStack output = calculateOutput(input1, input2, input3); // 计算输出
         itemHandler.setStackInSlot(3, output); // 设置输出槽
+
+        this.renderStack = input1.copy();
+        setChanged();
+        if (level != null && !level.isClientSide) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        }
     }
 
     // 根据输入计算输出
@@ -168,6 +176,7 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
         updateOutput();
     }
 
+    //#region 物品处理
     // 检查物品是否为碎片 √
     private boolean isDebris(ItemStack stack) {
         if (stack.isEmpty()) return false;
@@ -300,8 +309,7 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
                 newType = "boots";
                 break;
             default:
-                slot = "mainhand";
-                break;
+                return ItemStack.EMPTY;
         }
 
         if (tag != null && tag.contains("AttributeModifiers")) {
@@ -350,4 +358,35 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
         }
         return -1;
     }
+
+    //#endregion
+
+    //#region 渲染相关
+
+    // 获取渲染物品
+    public ItemStack getRenderStack() {
+        return renderStack;
+    }
+
+    // 获取旋转角度
+    public float getRotation(float partialTicks) {
+        return rotation + partialTicks;
+    }
+
+    // 获取悬浮高度
+    public float getHoverHeight(float partialTicks) {
+        return (float) Math.sin((hoverHeight + partialTicks) * 0.1f) * 0.1f + 0.2f;
+    }
+
+    // 每tick更新旋转和悬浮动画
+    public void tick() {
+        if (!renderStack.isEmpty()) {
+            rotation += 1.0f;
+            if (rotation >= 360.0f) {
+                rotation -= 360.0f;
+            }
+            hoverHeight += 1.0f;
+        }
+    }
+    //#endregion
 }
