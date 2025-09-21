@@ -4,6 +4,8 @@ import com.core.DLG.DLG;
 import com.core.DLG.block.RegistryBlock;
 import com.core.DLG.block.entity.RegistryBlockEntity;
 import com.core.DLG.block.entity.client.CraftingBlockEntityRender;
+import com.core.DLG.entity.RegistryEntity;
+import com.core.DLG.entity.client.CloudWhaleRenderer;
 import com.core.DLG.inventory.CraftingBlockScreen;
 import com.core.DLG.inventory.RegistryMenu;
 import com.core.DLG.item.RegistryItem;
@@ -11,6 +13,7 @@ import com.core.DLG.item.RegistryItem;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -75,7 +78,10 @@ public class ClientSetup {
                 CraftingBlockScreen::new
             );
 
-
+            EntityRenderers.register(
+                RegistryEntity.CLOUD_WHALE.get(), 
+                CloudWhaleRenderer::new
+            );
         });
     }
 

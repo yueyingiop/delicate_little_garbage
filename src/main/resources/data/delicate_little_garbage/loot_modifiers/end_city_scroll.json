@@ -1,0 +1,9 @@
+{
+    "type": "delicate_little_garbage:end_city_scroll",
+    "conditions": [
+        {
+            "condition": "minecraft:random_chance",
+            "chance": 0.05
+        }
+    ]
+}

@@ -6,6 +6,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkEvent;
 
 public class DamageTextPacket {
@@ -35,22 +37,23 @@ public class DamageTextPacket {
 
     public static void handle(DamageTextPacket msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            // 在客户端创建伤害文本
-            if (ctx.get().getDirection().getReceptionSide().isClient()) {
-                Minecraft minecraft = Minecraft.getInstance();
-                if (minecraft != null && minecraft.level != null) {
-                    Entity entity = minecraft.level.getEntity(msg.entityId);
-                    if (entity instanceof LivingEntity living) {
-                        DamageTextManager.spawnDamageText(
-                            minecraft.level,
-                            living,
-                            msg.damage,
-                            msg.damageTypeId
-                        );
-                    }
-                }
-            }
+            handleClient(msg);
         });
         ctx.get().setPacketHandled(true);
+    }
+    @OnlyIn(Dist.CLIENT)
+    private static void handleClient(DamageTextPacket msg) {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft != null && minecraft.level != null) {
+            Entity entity = minecraft.level.getEntity(msg.entityId);
+            if (entity instanceof LivingEntity living) {
+                DamageTextManager.spawnDamageText(
+                    minecraft.level,
+                    living,
+                    msg.damage,
+                    msg.damageTypeId
+                );
+            }
+        }
     }
 }

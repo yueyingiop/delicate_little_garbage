@@ -30,6 +30,7 @@ import com.core.DLG.effect.RegistryPotion;
 import com.core.DLG.entity.RegistryEntity;
 import com.core.DLG.inventory.RegistryMenu;
 import com.core.DLG.item.RegistryItem;
+import com.core.DLG.loot.RegistryGLM;
 import com.core.DLG.util.damageHUD.DamageHUDPacket;
 import com.core.DLG.util.damageText.DamageTextPacket;
 
@@ -51,8 +52,11 @@ public class DLG
             output.accept(RegistryItem.LIFT_CRYSTAL.get());
             output.accept(RegistryItem.INDESTRUCTIBLE_SCROLL.get());
             output.accept(RegistryItem.NEPETA_CATARIA_ITEM.get());
+            output.accept(RegistryItem.NEPETA_CATARIA_LEAF.get());
             output.accept(RegistryItem.NEPETA_CATARIA_SEEDS.get());
             output.accept(RegistryItem.DEBRIS_SMITHING_TABLE_ITEM.get());
+            output.accept(RegistryItem.CLOUD_SUGAR.get());
+            output.accept(RegistryItem.CLOUD_WHALE_SPAWN_EGG.get());
         })
         .build()
     );
@@ -76,6 +80,7 @@ public class DLG
         RegistryEntity.ENTITIES.register(modEventBus); // 注册实体
         RegistryEffect.EFFECTS.register(modEventBus); // 注册效果
         RegistryPotion.POTIONS.register(modEventBus); // 注册药水
+        RegistryGLM.GLM.register(modEventBus); // 注册战利品
         RegistryAttribute(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
 
@@ -88,8 +93,6 @@ public class DLG
         }
 
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
-
-
     }
 
     private void RegistryAttribute(IEventBus modEventBus){

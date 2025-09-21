@@ -112,4 +112,19 @@ public class AnvilUpdateEventHandler {
             });
         }
     }
+
+    // 物品可添加无法破坏
+    @SubscribeEvent
+    public static void addUnbreakable(AnvilUpdateEvent event) throws IOException {
+        ItemStack leftItemStack = event.getLeft();
+        ItemStack rightItemStack = event.getRight();
+
+        if (!leftItemStack.isEmpty() && rightItemStack.getItem() == RegistryItem.INDESTRUCTIBLE_SCROLL.get()) {
+            ItemStack output = leftItemStack.copy();
+            output.getOrCreateTag().putBoolean("Unbreakable", true);
+            event.setOutput(output);
+            event.setCost(10);
+        }
+    }
+
 }

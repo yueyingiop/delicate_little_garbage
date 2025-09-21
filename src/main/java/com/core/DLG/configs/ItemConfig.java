@@ -31,7 +31,7 @@ public class ItemConfig {
 
             if(!file.exists()){
                 JsonObject json = new JsonObject();
-                json.addProperty("maxStackSize",65525);
+                json.addProperty("maxStackSize",64);
                 json.addProperty("itemCooldowns",true);
 
                 // 装备碎片
@@ -94,7 +94,7 @@ public class ItemConfig {
         JsonObject currentData = JsonParser.parseString(Files.readString(file.toPath())).getAsJsonObject();
         int isTrue = 0;
         if (currentData.get("maxStackSize") == null) {
-            currentData.addProperty("maxStackSize",65525);
+            currentData.addProperty("maxStackSize",64);
             isTrue++;
         }
         if (currentData.get("itemCooldowns") == null) {

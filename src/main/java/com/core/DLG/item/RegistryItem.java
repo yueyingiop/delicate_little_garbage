@@ -2,7 +2,9 @@ package com.core.DLG.item;
 
 import com.core.DLG.DLG;
 import com.core.DLG.block.RegistryBlock;
+import com.core.DLG.entity.RegistryEntity;
 
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraftforge.registries.DeferredRegister;
@@ -16,11 +18,13 @@ public class RegistryItem extends Item {
 
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, DLG.MODID);
 
+    // 注册碎片物品
     public static final RegistryObject<Item> EQUIPMENT_DEBRIS = ITEMS.register(
         "equipment_debris", 
         () -> new DebrisItem("equipment_debris", new Item.Properties())
     );
 
+    // 注册普通物品
     public static final RegistryObject<Item> DELICATE_LITTLE_GARBAGE = ITEMS.register(
         "delicate_little_garbage", 
         () -> new RegistryItem(
@@ -49,6 +53,14 @@ public class RegistryItem extends Item {
         )
     );
 
+    public static final RegistryObject<Item> NEPETA_CATARIA_LEAF = ITEMS.register(
+        "nepeta_cataria_leaf",
+        () -> new RegistryItem(
+            new Item.Properties()
+        )
+    );
+
+    // 注册作物种子
     public static final RegistryObject<Item> NEPETA_CATARIA_SEEDS = ITEMS.register(
         "nepeta_cataria_seeds",
         () -> new ItemNameBlockItem(
@@ -57,11 +69,35 @@ public class RegistryItem extends Item {
         )
     );
 
+    // 注册食物
+    public static final RegistryObject<Item> CLOUD_SUGAR = ITEMS.register(
+        "cloud_sugar",
+        () -> new RegistryItem(
+            new Item.Properties().food(
+                new FoodProperties.Builder()
+                    .nutrition(7) // 饥饿值
+                    .saturationMod(2.0F) // 饱和度
+                    .build()
+            )
+        )
+    );
+
+    // 注册工作方块
     public static final RegistryObject<Item> DEBRIS_SMITHING_TABLE_ITEM = ITEMS.register(
         "debris_smithing_table_item",
         () -> new CraftingBlockItem(
             "debris_smithing_table_item",
             RegistryBlock.DEBRIS_SMITHING_TABLE.get(),
+            new Item.Properties()
+        )
+    );
+
+    public static final RegistryObject<Item> CLOUD_WHALE_SPAWN_EGG = ITEMS.register(
+        "cloud_whale_spawn_egg",
+        () -> new CloudWhaleSpawnEggItem(
+            RegistryEntity.CLOUD_WHALE, 
+            0xEB8FCF,
+            0xFFFFFF,
             new Item.Properties()
         )
     );
