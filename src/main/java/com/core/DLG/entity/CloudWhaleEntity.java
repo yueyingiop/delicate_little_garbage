@@ -3,6 +3,9 @@ package com.core.DLG.entity;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.core.DLG.entity.Goal.WhaleBehaviorGoal;
+import com.core.DLG.item.RegistryItem;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -19,17 +22,14 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
-import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.PanicGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomFlyingGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
@@ -48,6 +48,8 @@ public class CloudWhaleEntity extends TamableAnimal {
     private boolean wasBaby = false; // 是否是幼小的云鲸
     private Player attractedPlayer = null; // 被吸引的玩家
     private WaterAvoidingRandomFlyingGoal randomFlyingGoal; // 随机移动
+
+    private WhaleBehaviorGoal behaviorGoal; // 行为控制
     
     protected CloudWhaleEntity(EntityType<? extends TamableAnimal> type, Level level) {
         super(type, level);
@@ -141,13 +143,6 @@ public class CloudWhaleEntity extends TamableAnimal {
             return 0.125F;
         }
         return 0.25F;
-    }
-
-    // 游戏读取数据
-    @Override
-    public void readAdditionalSaveData(@Nonnull CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        this.refreshDimensions();
     }
     //#endregion
 
@@ -244,9 +239,9 @@ public class CloudWhaleEntity extends TamableAnimal {
 
     // 未驯服生物能否被吸引判断
     private void findPlayerAndCheckAttractionConditions(){
-        // 寻找玩家,并判断是否满足吸引条件(拿着发光浆果)
+        // 寻找玩家,并判断是否满足吸引条件(拿着云朵糖)
         Player nearestPlayer = this.level().getNearestPlayer(this, 16.0);
-        if (nearestPlayer != null && nearestPlayer.getItemInHand(InteractionHand.MAIN_HAND).getItem() == Items.GLOW_BERRIES) {
+        if (nearestPlayer != null && nearestPlayer.getItemInHand(InteractionHand.MAIN_HAND).getItem() == RegistryItem.CLOUD_SUGAR.get()) {
             if (randomFlyingGoal != null && this.goalSelector.getAvailableGoals().stream()
                     .anyMatch(w -> w.getGoal() == randomFlyingGoal)) {
                 this.goalSelector.removeGoal(randomFlyingGoal);
@@ -351,7 +346,7 @@ public class CloudWhaleEntity extends TamableAnimal {
     public InteractionResult mobInteract(@Nonnull Player player, @Nonnull InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         
-        if (!this.isTame() && itemstack.getItem() == Items.GLOW_BERRIES) {
+        if (!this.isTame() && itemstack.getItem() == RegistryItem.CLOUD_SUGAR.get()) {
             if (!player.getAbilities().instabuild) {
                 itemstack.shrink(1);
             }
@@ -362,6 +357,7 @@ public class CloudWhaleEntity extends TamableAnimal {
                 this.navigation.stop();
                 this.setTarget(null);
                 this.level().broadcastEntityEvent(this, (byte)7);
+                // 驯服后添加随机移动目标
                 if (
                     randomFlyingGoal != null && 
                     this.goalSelector.getAvailableGoals()
@@ -377,8 +373,10 @@ public class CloudWhaleEntity extends TamableAnimal {
         }
         
         if (this.isTame() && this.isOwnedBy(player)) {
-            
-            return super.mobInteract(player, hand);
+            if (!this.level().isClientSide && behaviorGoal != null) {
+                behaviorGoal.switchBehavior();
+            }
+            return InteractionResult.sidedSuccess(this.level().isClientSide);
         }
         
         return super.mobInteract(player, hand);
@@ -390,11 +388,66 @@ public class CloudWhaleEntity extends TamableAnimal {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new PanicGoal(this, 1.25D));
         // this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
-        this.goalSelector.addGoal(2, new FollowOwnerGoal(this, 0.8D, 5.0F, 1.5F, true));
-        this.randomFlyingGoal = new WaterAvoidingRandomFlyingGoal(this, 0.25D);
-        this.goalSelector.addGoal(3, randomFlyingGoal);
+        this.behaviorGoal = new WhaleBehaviorGoal(this);
+        this.goalSelector.addGoal(1, behaviorGoal);
+        // this.goalSelector.addGoal(2, new FlyFollowOwnerGoal(this, 0.8D, 5.0F, 1.5F, true));
+        this.randomFlyingGoal = new WaterAvoidingRandomFlyingGoal(this, 0.25D) {
+            @Override
+            public boolean canUse() {
+                // 只在未驯服时使用随机移动
+                return !CloudWhaleEntity.this.isTame() && super.canUse();
+            }
+
+            @Override
+            public boolean canContinueToUse() {
+                return !CloudWhaleEntity.this.isTame() && super.canContinueToUse();
+            }
+        };
+        this.goalSelector.addGoal(2, randomFlyingGoal);
         this.goalSelector.addGoal(4, new LookAtPlayerGoal(this, Player.class, 6.0F));
         this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
     }
 
+    // 添加保存和加载行为状态的方法
+    @Override
+    public void addAdditionalSaveData(@Nonnull CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        if (behaviorGoal != null) {
+        compound.putInt("WhaleBehaviorState", behaviorGoal.getCurrentState().getId());
+        
+        // 保存游荡中心
+        if (behaviorGoal.getWanderCenter() != null) {
+            CompoundTag wanderCenterTag = new CompoundTag();
+            wanderCenterTag.putDouble("X", behaviorGoal.getWanderCenter().x);
+            wanderCenterTag.putDouble("Y", behaviorGoal.getWanderCenter().y);
+            wanderCenterTag.putDouble("Z", behaviorGoal.getWanderCenter().z);
+            compound.put("WanderCenter", wanderCenterTag);
+        }
+    }
+    }
+
+    @Override
+    public void readAdditionalSaveData(@Nonnull CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        if (compound.contains("WhaleBehaviorState") && behaviorGoal != null) {
+        int stateId = compound.getInt("WhaleBehaviorState");
+        WhaleBehaviorGoal.BehaviorState state = WhaleBehaviorGoal.BehaviorState.getById(stateId);
+        behaviorGoal.setState(state);
+        
+        // 加载游荡中心
+        if (compound.contains("WanderCenter")) {
+            CompoundTag wanderCenterTag = compound.getCompound("WanderCenter");
+            double x = wanderCenterTag.getDouble("X");
+            double y = wanderCenterTag.getDouble("Y");
+            double z = wanderCenterTag.getDouble("Z");
+            behaviorGoal.setWanderCenter(new Vec3(x, y, z));
+        }
+    }
+        this.refreshDimensions();
+    }
+
+    // 获取行为目标（可选，用于外部访问）
+    public WhaleBehaviorGoal getBehaviorGoal() {
+        return behaviorGoal;
+    }
 }

@@ -54,7 +54,7 @@ public class LivingHurtEventHandler {
                 event.setCanceled(true);
                 event.setAmount(0);
                 player.displayClientMessage(
-                    Component.translatable("闪避成功").withStyle(ChatFormatting.YELLOW), 
+                    Component.translatable("tips.dlg.attribute.dodge").withStyle(ChatFormatting.YELLOW), 
                     true
                 );
             }

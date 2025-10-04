@@ -26,7 +26,7 @@ public class PlayerConfig {
             if(!file.exists()){
                 JsonObject json = new JsonObject();
                 json.addProperty("cancelAttackGap", true); // 是否取消攻击间隔
-                json.addProperty("cancelInvulnerableDuration", true); // 是否取消无伤害
+                json.addProperty("cancelInvulnerableDuration", true); // 是否取消无敌时间
                 json.addProperty("alwaysEat",true); // 是否总是吃
                 json.addProperty("alwaysSleep",true); // 是否总是睡觉
                 json.addProperty("sleepDurationTime",12000); // 睡觉时间

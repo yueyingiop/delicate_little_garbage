@@ -1,0 +1,27 @@
+{
+  "feature": "delicate_little_garbage:cloud_block",
+  "placement": [
+    {
+      "type": "minecraft:height_range",
+      "height": {
+        "type": "minecraft:uniform",
+        "max_inclusive": {
+          "absolute": 220
+        },
+        "min_inclusive": {
+          "absolute": 190
+        }
+      }
+    },
+    {
+      "type": "minecraft:count",
+      "count": 3
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

@@ -64,15 +64,15 @@ public class RightClickItemHandler {
             if (player.isShiftKeyDown() && tag.contains("boundDebris")) {
                 for (int i = 0; i < modifiersList.size(); i++) {
                     CompoundTag modifierTag = modifiersList.getCompound(i);
-                    String slot = "主手";
+                    Component slot = Component.translatable("tips.dlg.solt.mainhand");
                     if (modifierTag.getString("Slot").equals("mainhand")) {
                         modifierTag.putString("Slot", "offhand");
-                        slot = "副手";
+                        slot = Component.translatable("tips.dlg.solt.offhand");
                     } else if (modifierTag.getString("Slot").equals("offhand")) {
                         modifierTag.putString("Slot", "mainhand");
-                        slot = "主手";
+                        slot = Component.translatable("tips.dlg.solt.mainhand");
                     }
-                    player.displayClientMessage(Component.translatable("已将属性切换到在 "+slot+" 时生效").withStyle(ChatFormatting.GOLD), true);
+                    player.displayClientMessage(Component.translatable("tips.dlg.solt.switch", slot).withStyle(ChatFormatting.GOLD), true);
                 }
             }
         }

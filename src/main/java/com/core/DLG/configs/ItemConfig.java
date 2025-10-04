@@ -32,7 +32,7 @@ public class ItemConfig {
             if(!file.exists()){
                 JsonObject json = new JsonObject();
                 json.addProperty("maxStackSize",64);
-                json.addProperty("itemCooldowns",true);
+                json.addProperty("cancelItemCooldowns",true);
 
                 // 装备碎片
                 JsonObject equipmentDebris = new JsonObject();
@@ -97,8 +97,8 @@ public class ItemConfig {
             currentData.addProperty("maxStackSize",64);
             isTrue++;
         }
-        if (currentData.get("itemCooldowns") == null) {
-            currentData.addProperty("itemCooldowns",true);
+        if (currentData.get("cancelItemCooldowns") == null) {
+            currentData.addProperty("cancelItemCooldowns",true);
             isTrue++;
         }
         if (currentData.get("equipmentDebris") == null) {
@@ -335,7 +335,8 @@ public class ItemConfig {
             "minecraft:gold_ingot",
             "minecraft:diamond",
             "minecraft:netherite_ingot",
-            "minecraft:nether_star"
+            "minecraft:nether_star",
+            "delicate_little_garbage:indestructible_scroll"
         };
         for (int i = 0; i < upgradeMaterials.length; i++) { 
             JsonObject itemConfig = new JsonObject();
@@ -665,8 +666,8 @@ public class ItemConfig {
         return Math.max(1, Math.min(data.get("maxStackSize").getAsInt(), Integer.MAX_VALUE-1));
     }
 
-    public static boolean getItemCooldowns(){
-        return data.get("itemCooldowns").getAsBoolean();
+    public static boolean getCancelItemCooldowns(){
+        return data.get("cancelItemCooldowns").getAsBoolean();
     }
 
     //#region 装备碎片配置相关函数

@@ -5,6 +5,7 @@ import com.core.DLG.block.RegistryBlock;
 import com.core.DLG.entity.RegistryEntity;
 
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraftforge.registries.DeferredRegister;
@@ -60,6 +61,20 @@ public class RegistryItem extends Item {
         )
     );
 
+    public static final RegistryObject<Item> CLOUD_BOTTLE = ITEMS.register(
+        "cloud_bottle",
+        () -> new RegistryItem(
+            new Item.Properties()
+        )
+    );
+
+    public static final RegistryObject<Item> ANY = ITEMS.register(
+        "any",
+        () -> new RegistryItem(
+            new Item.Properties()
+        )
+    );
+
     // 注册作物种子
     public static final RegistryObject<Item> NEPETA_CATARIA_SEEDS = ITEMS.register(
         "nepeta_cataria_seeds",
@@ -75,8 +90,8 @@ public class RegistryItem extends Item {
         () -> new RegistryItem(
             new Item.Properties().food(
                 new FoodProperties.Builder()
-                    .nutrition(7) // 饥饿值
-                    .saturationMod(2.0F) // 饱和度
+                    .nutrition(6) // 饥饿值
+                    .saturationMod(0.5F) // 饱和度
                     .build()
             )
         )
@@ -99,6 +114,14 @@ public class RegistryItem extends Item {
             0xEB8FCF,
             0xFFFFFF,
             new Item.Properties()
+        )
+    );
+
+    public static final RegistryObject<Item> CLOUD_BLOCK_ITEM = ITEMS.register(
+        "cloud_block_item",
+        () -> new BlockItem(
+            RegistryBlock.CLOUD_BLOCK.get(), 
+            new Item.Properties()    
         )
     );
 }

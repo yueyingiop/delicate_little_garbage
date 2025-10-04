@@ -1,0 +1,4 @@
+// 1.20.1	2025-09-30T00:21:12.2257584	Registries
+8ec637a513f8211fdc631284eae0c0b9880bbab5 data/delicate_little_garbage/forge/biome_modifier/add_cloud_feature.json
+94f25cc0cd869f80f75b0faf4355721ef0677adc data/delicate_little_garbage/worldgen/configured_feature/cloud_block.json
+e0848b59b62bebc6f6c648289e9616745356b639 data/delicate_little_garbage/worldgen/placed_feature/cloud_block_placed.json

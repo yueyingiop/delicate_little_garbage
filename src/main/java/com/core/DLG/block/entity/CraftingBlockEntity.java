@@ -214,7 +214,7 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
         newTag.putInt("maxExp", 100);
         tag.put("boundDebris", newTag);
 
-        if (debrisQuality > 6) tag.putBoolean("Unbreakable", true); // 传说及以上品质装备无损坏
+        if (debrisQuality > 7) tag.putBoolean("Unbreakable", true); // 至尊及以上品质装备无损坏
         
         try {
             EntryHelper.initEntry(

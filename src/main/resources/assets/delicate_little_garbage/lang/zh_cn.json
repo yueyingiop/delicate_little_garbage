@@ -1,10 +1,13 @@
 {
+    "item.delicate_little_garbage.any": "任意物品",
     "item.delicate_little_garbage.equipment_debris": "装备碎片",
     "item.delicate_little_garbage.life_crystal": "生命水晶",
     "item.delicate_little_garbage.delicate_little_garbage": "精致小垃圾",
     "item.delicate_little_garbage.nepeta_cataria_item": "猫薄荷",
     "item.delicate_little_garbage.nepeta_cataria_seeds": "猫薄荷种子",
     "item.delicate_little_garbage.nepeta_cataria_leaf": "猫薄荷叶",
+    "item.delicate_little_garbage.cloud_block_item" : "云朵方块",
+    "item.delicate_little_garbage.cloud_bottle": "云朵瓶",
     "item.delicate_little_garbage.cloud_sugar": "云朵糖",
     "item.delicate_little_garbage.indestructible_scroll": "不毁卷轴",
     "item.delicate_little_garbage.cloud_whale_spawn_egg": "云鲸刷怪蛋",
@@ -15,12 +18,24 @@
 
     "block.delicate_little_garbage.nepeta_cataria": "猫薄荷",
     "block.delicate_little_garbage.debris_smithing_table": "碎片锻造台",
+    "block.delicate_little_garbage.cloud_block": "云朵方块",
+    
+    "entity.delicate_little_garbage.cloud_whale": "云鲸",
     
     "effect.delicate_little_garbage.cat_effect": "唤猫之印",
     
     "container.dlg.debris_smithing_table": "碎片锻造台",
 
     "itemGroup.dlg_tab": "精致小垃圾",
+    
+    "tips.dlg.attribute.dodge": "闪避成功",
+    "tips.dlg.solt.switch": "已将属性切换到在 %s 时生效",
+    "tips.dlg.solt.mainhand": "主手",
+    "tips.dlg.solt.offhand": "副手",
+    "tips.dlg.cloud_whale.update_behavior": "云鲸现在处于 %s 模式",
+    "tips.dlg.cloud_whale.follow": "跟随",
+    "tips.dlg.cloud_whale.wander": "游荡",
+    "tips.dlg.cloud_whale.wait": "等待",
 
     "tooltip.dlg.stackcount": "堆叠数: %s",
     "tooltip.dlg.upgrade": "按住[SHIFT]查看绑定信息",
@@ -56,6 +71,7 @@
     "tooltip.dlg.debris.quality.default_quality": "默认",
     "tooltip.dlg.debris.quality.undefined_quality": "未定义",
 
+
     "attribute.dlg.critical_chance": "暴击率",
     "attribute.dlg.critical_damage": "暴击伤害",
     "attribute.dlg.penetration_chance": "穿透率",
@@ -64,6 +80,52 @@
     "attribute.dlg.lifesteal_damage": "吸血伤害",
     "attribute.dlg.dodge": "闪避率",
     "attribute.dlg.hp_regen": "生命恢复",
-    "attribute.dlg.healing_bonus": "治疗加成"
+    "attribute.dlg.healing_bonus": "治疗加成",
 
+
+    "jei.delicate_little_garbage.recipe_type.bind": "绑定词条",
+    "jei.delicate_little_garbage.recipe_type.upgrade_quality": "提升碎片品质",
+    "jei.delicate_little_garbage.recipe_type.upgrade_level": "提升物品等级",
+    "jei.delicate_little_garbage.recipe_type.switch_slot": "更换绑定槽位",
+    "jei.delicate_little_garbage.recipe_type.unknown": "未知",
+
+    "jei.delicate_little_garbage.info.title": "[%s]",
+    "jei.delicate_little_garbage.info.equipment_debris.get.title": "获取途径:",
+    "jei.delicate_little_garbage.info.equipment_debris.get.line0": "1.部分物品损坏后会掉落碎片",
+    "jei.delicate_little_garbage.info.equipment_debris.use.title": "使用方法:",
+    "jei.delicate_little_garbage.info.equipment_debris.use.line0": "1.放入铁砧中可以修复物品耐久",
+    "jei.delicate_little_garbage.info.equipment_debris.use.line1": "2.将任意物品与碎片放入碎片锻造台可以为物品绑定词条",
+    "jei.delicate_little_garbage.info.equipment_debris.use.line2": "3.碎片与升级材料放入碎片锻造台可以提升碎片品质",
+    "jei.delicate_little_garbage.info.equipment_debris.use.line3": "4.将带有类型的碎片放入砂轮可以删除类型并返回经验",
+
+    "jei.delicate_little_garbage.info.cloud_block_item.get.title": "获取途径:",
+    "jei.delicate_little_garbage.info.cloud_block_item.get.line0": "可以用玻璃瓶右键云朵方块装入瓶中",
+
+    "jei.delicate_little_garbage.info.cloud_bottle.get.title": "获取途径:",
+    "jei.delicate_little_garbage.info.cloud_bottle.get.line0": "玻璃瓶右键云朵方块获取云朵瓶",
+    "jei.delicate_little_garbage.info.cloud_bottle.use.title": "使用方法:",
+    "jei.delicate_little_garbage.info.cloud_bottle.use.line0": "云朵瓶右键方块放置云朵方块",
+
+    "jei.delicate_little_garbage.info.indestructible_scroll.get.title": "获取途径:",
+    "jei.delicate_little_garbage.info.indestructible_scroll.get.line0": "在末地城中战利品箱有5%%概率获取",
+    "jei.delicate_little_garbage.info.indestructible_scroll.use.title": "使用方法:",
+    "jei.delicate_little_garbage.info.indestructible_scroll.use.line0": "将任意物品与卷轴放入铁砧可以为物品添加无法破坏",
+
+    "jei.delicate_little_garbage.info.delicate_little_garbage.get.title": "获取途径:",
+    "jei.delicate_little_garbage.info.delicate_little_garbage.get.line0": "击杀boss概率掉落",
+    "jei.delicate_little_garbage.info.delicate_little_garbage.use.title": "使用方法:",
+    "jei.delicate_little_garbage.info.delicate_little_garbage.use.line0": "为绑定了词条的物品提供经验",
+
+    "jei.delicate_little_garbage.info.life_crystal.get.title": "获取途径:",
+    "jei.delicate_little_garbage.info.life_crystal.get.line0": "击杀敌对生物概率掉落",
+    "jei.delicate_little_garbage.info.life_crystal.use.title": "使用方法:",
+    "jei.delicate_little_garbage.info.life_crystal.use.line0": "为绑定了词条的物品提供经验",
+
+    "jei.delicate_little_garbage.info.nepeta_cataria_item.comments.title": "备注:",
+    "jei.delicate_little_garbage.info.nepeta_cataria_item.comments.line0": "当猫薄荷成熟会吸引猫和豹猫",
+
+    "jei.delicate_little_garbage.info.nepeta_cataria_seeds.get.title": "获取途径:",
+    "jei.delicate_little_garbage.info.nepeta_cataria_seeds.get.line0": "与农民交易获得",
+    "jei.delicate_little_garbage.info.nepeta_cataria_seeds.comments.title": "备注:",
+    "jei.delicate_little_garbage.info.nepeta_cataria_seeds.comments.line0": "当猫薄荷成熟会吸引猫和豹猫"
 }

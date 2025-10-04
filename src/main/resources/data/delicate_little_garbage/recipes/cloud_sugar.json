@@ -1,0 +1,27 @@
+{
+    "type": "delicate_little_garbage:custom_shapeless",
+    "ingredients": [
+        {
+            "item": "minecraft:milk_bucket"
+        },
+        {
+            "item": "delicate_little_garbage:cloud_bottle"
+        },
+        {
+            "item": "minecraft:sugar"
+        },
+        {
+            "item": "minecraft:sugar"
+        },
+        {
+            "item": "minecraft:sugar"
+        },
+        {
+            "item": "minecraft:sugar"
+        }
+    ],
+    "result": {
+        "item": "delicate_little_garbage:cloud_sugar",
+        "count": 4
+    }
+}

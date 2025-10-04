@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#minecraft:is_overworld",
+  "features": "delicate_little_garbage:cloud_block_placed",
+  "step": "raw_generation"
+}

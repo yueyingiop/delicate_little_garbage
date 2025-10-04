@@ -17,7 +17,7 @@ public abstract class ItemCooldownsMixin {
     @Inject(method = "addCooldown", at = @At("HEAD"), cancellable = true)
     private void cancelCooldown(Item item, int ticks, CallbackInfo ci) throws IOException{
         ItemConfig.init();
-        if (ItemConfig.getItemCooldowns()) {
+        if (ItemConfig.getCancelItemCooldowns()) {
             ci.cancel();
         }
     }

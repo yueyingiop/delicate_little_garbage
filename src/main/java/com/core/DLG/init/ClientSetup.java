@@ -64,12 +64,17 @@ public class ClientSetup {
             // 设置方块渲染层透明
             ItemBlockRenderTypes.setRenderLayer(
                 RegistryBlock.DEBRIS_SMITHING_TABLE.get(), 
-                RenderType.translucent()
+                RenderType.translucent() // 透明
             );
 
             ItemBlockRenderTypes.setRenderLayer(
                 RegistryBlock.NEPETA_CATARIA.get(), 
-                RenderType.cutout()
+                RenderType.cutout() // 透明(不遮挡)
+            );
+
+            ItemBlockRenderTypes.setRenderLayer(
+                RegistryBlock.CLOUD_BLOCK.get(), 
+                RenderType.translucent() // 透明
             );
 
             // 设置gui渲染

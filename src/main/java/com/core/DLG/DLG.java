@@ -1,11 +1,14 @@
 package com.core.DLG;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -17,6 +20,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,9 +32,12 @@ import com.core.DLG.configs.ItemConfig;
 import com.core.DLG.effect.RegistryEffect;
 import com.core.DLG.effect.RegistryPotion;
 import com.core.DLG.entity.RegistryEntity;
+import com.core.DLG.generation.RegistryFeature;
+import com.core.DLG.generation.data.WorldGenProvider;
 import com.core.DLG.inventory.RegistryMenu;
 import com.core.DLG.item.RegistryItem;
 import com.core.DLG.loot.RegistryGLM;
+import com.core.DLG.recipe.RegistryRecipe;
 import com.core.DLG.util.damageHUD.DamageHUDPacket;
 import com.core.DLG.util.damageText.DamageTextPacket;
 
@@ -57,6 +64,8 @@ public class DLG
             output.accept(RegistryItem.DEBRIS_SMITHING_TABLE_ITEM.get());
             output.accept(RegistryItem.CLOUD_SUGAR.get());
             output.accept(RegistryItem.CLOUD_WHALE_SPAWN_EGG.get());
+            output.accept(RegistryItem.CLOUD_BLOCK_ITEM.get());
+            output.accept(RegistryItem.CLOUD_BOTTLE.get());
         })
         .build()
     );
@@ -81,10 +90,13 @@ public class DLG
         RegistryEffect.EFFECTS.register(modEventBus); // 注册效果
         RegistryPotion.POTIONS.register(modEventBus); // 注册药水
         RegistryGLM.GLM.register(modEventBus); // 注册战利品
-        RegistryAttribute(modEventBus);
-        CREATIVE_MODE_TABS.register(modEventBus);
+        RegistryAttribute(modEventBus); // 注册属性
+        RegistryFeature.FEATURES.register(modEventBus); // 注册生成规则
+        RegistryRecipe.RECIPE_SERIALIZERS.register(modEventBus); // 注册自定义序列化器
+        CREATIVE_MODE_TABS.register(modEventBus); // 注册创造模式标签
 
         modEventBus.addListener(this::setupNetwork);
+        modEventBus.addListener(this::gatherData);
         MinecraftForge.EVENT_BUS.register(this);
         try {
             ItemConfig.init();
@@ -124,4 +136,11 @@ public class DLG
             DamageHUDPacket::handle
         );
     }
+
+    private void gatherData(GatherDataEvent event) {
+    PackOutput output = event.getGenerator().getPackOutput();
+    CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+    
+    event.getGenerator().addProvider(event.includeServer(), new WorldGenProvider(output, lookupProvider));
+}
 }

@@ -15,6 +15,7 @@ public class RegistryBlock {
 
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, DLG.MODID);
 
+    // 碎片锻造台
     public static final RegistryObject<Block> DEBRIS_SMITHING_TABLE = 
     BLOCKS.register(
         "debris_smithing_table",
@@ -32,6 +33,7 @@ public class RegistryBlock {
         )
     );
 
+    // 猫薄荷
     public static final RegistryObject<Block> NEPETA_CATARIA = 
     BLOCKS.register(
         "nepeta_cataria",
@@ -43,6 +45,20 @@ public class RegistryBlock {
                 .sound(SoundType.CROP)
                 .randomTicks(),
             () -> RegistryItem.NEPETA_CATARIA_SEEDS.get()
+        )
+    );
+
+    // 云朵方块
+    public static final RegistryObject<Block> CLOUD_BLOCK = 
+    BLOCKS.register(
+        "cloud_block",
+        () -> new Block(
+            BlockBehaviour.Properties.of()
+                .noCollission() // 无碰撞
+                .strength(0.5F) // 硬度
+                .sound(SoundType.WOOL) // 声音
+                .friction(0.98F) // 摩擦力
+                .noLootTable() // 禁用掉落
         )
     );
 }

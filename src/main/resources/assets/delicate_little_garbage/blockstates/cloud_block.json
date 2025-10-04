@@ -1,0 +1,7 @@
+{
+    "variants": {
+        "" : {
+            "model": "delicate_little_garbage:block/cloud_block"
+        }
+    }
+}
