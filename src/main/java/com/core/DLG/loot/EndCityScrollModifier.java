@@ -36,7 +36,7 @@ public class EndCityScrollModifier extends LootModifier {
         ObjectArrayList<ItemStack> generatedLoot,
         LootContext context
     ) {
-        if (context.getQueriedLootTableId().equals(new ResourceLocation("minecraft:chests/end_city_treasure"))) {
+        if (context.getQueriedLootTableId().equals(ResourceLocation.parse("minecraft:chests/end_city_treasure"))) {
             generatedLoot.add(new ItemStack(RegistryItem.INDESTRUCTIBLE_SCROLL.get()));
         }
         return generatedLoot;

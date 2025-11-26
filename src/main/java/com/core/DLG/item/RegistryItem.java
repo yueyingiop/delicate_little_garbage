@@ -124,4 +124,11 @@ public class RegistryItem extends Item {
             new Item.Properties()    
         )
     );
+
+    public static final RegistryObject<Item> PORTABLE_WORKER_ITEM = ITEMS.register(
+        "portable_worker_item",
+        () -> new PortableWorkerItem(
+            new Item.Properties()
+        )
+    );
 }

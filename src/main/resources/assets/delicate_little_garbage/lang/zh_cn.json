@@ -127,5 +127,12 @@
     "jei.delicate_little_garbage.info.nepeta_cataria_seeds.get.title": "获取途径:",
     "jei.delicate_little_garbage.info.nepeta_cataria_seeds.get.line0": "与农民交易获得",
     "jei.delicate_little_garbage.info.nepeta_cataria_seeds.comments.title": "备注:",
-    "jei.delicate_little_garbage.info.nepeta_cataria_seeds.comments.line0": "当猫薄荷成熟会吸引猫和豹猫"
+    "jei.delicate_little_garbage.info.nepeta_cataria_seeds.comments.line0": "当猫薄荷成熟会吸引猫和豹猫",
+    
+    "jei.delicate_little_garbage.info.cloud_sugar.use.title": "使用方法:",
+    "jei.delicate_little_garbage.info.cloud_sugar.use.line0": "用于驯服云鲸",
+    
+    "jei.delicate_little_garbage.info.cloud_whale_spawn_egg.comments.title": "备注:",
+    "jei.delicate_little_garbage.info.cloud_whale_spawn_egg.comments.line0": "因为自然生成有问题,所以目前云鲸只能与农民交易获取",
+    "jei.delicate_little_garbage.info.cloud_whale_spawn_egg.comments.line1": "建议搭建一个封闭空间, 云鲸生成后会向天空飞行"
 }

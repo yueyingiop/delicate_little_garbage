@@ -108,4 +108,14 @@ public class RegistryInfoDisplay {
         new ItemStack(RegistryItem.NEPETA_CATARIA_SEEDS.get()),
         List.of("get","comments")
     );
+
+    public static JeiInfoDisplay cloudSugarInfoDisplay = new JeiInfoDisplay(
+        new ItemStack(RegistryItem.CLOUD_SUGAR.get()),
+        List.of("use")
+    );
+
+    public static JeiInfoDisplay cloudWhaleInfoDisplay = new JeiInfoDisplay(
+        new ItemStack(RegistryItem.CLOUD_WHALE_SPAWN_EGG.get()),
+        List.of("comments")
+    );
 }

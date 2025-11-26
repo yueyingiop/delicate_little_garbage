@@ -81,6 +81,16 @@ public class DLGJeiPlugin implements IModPlugin {
             new ItemStack(RegistryItem.NEPETA_CATARIA_SEEDS.get()),
             RegistryInfoDisplay.nepetaCatariaSeedsInfoDisplay.buildDescription()
         );
+
+        registration.addItemStackInfo(
+            new ItemStack(RegistryItem.CLOUD_SUGAR.get()),
+            RegistryInfoDisplay.cloudSugarInfoDisplay.buildDescription()
+        );
+
+        registration.addItemStackInfo(
+            new ItemStack(RegistryItem.CLOUD_WHALE_SPAWN_EGG.get()),
+            RegistryInfoDisplay.cloudWhaleInfoDisplay.buildDescription()
+        );
     }
 
     @Override
